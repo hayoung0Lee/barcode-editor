@@ -18,13 +18,14 @@ interface flex {
 
 type NodeType = "Container" | "Text" | "Barcode" | "Qrcode";
 
-export interface Node {
-    type: NodeType,
+export interface LayoutDefinition {
+    type: "Container" | "Text" | "Barcode" | "Qrcode",
     flex: flex,
-    children: Node[],
+    children: LayoutDefinition[],
     [property: string]: any // text, barcode, qrcode
     // text: {},
     // barcode: {},
     // qrcode: {}
 }
 
+export interface ComputedLayout {}

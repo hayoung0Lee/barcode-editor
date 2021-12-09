@@ -13,7 +13,7 @@
     position: relative;
 }
 
-.box {
+.Box {
     box-shadow: var(--box-border-size) 0 0 0 var(--box-border-color),
     0 var(--box-border-size) 0 0 var(--box-border-color),
     var(--box-border-size) var(--box-border-size) 0 0 var(--box-border-color),
