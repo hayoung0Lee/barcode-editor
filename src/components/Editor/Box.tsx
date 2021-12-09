@@ -7,35 +7,106 @@ interface PropType {
   computedLayout: any;
 }
 
+function convertToPx(pt: any): any {
+  if (!pt) {
+    return undefined;
+  }
+  if (pt.charAt(pt.length - 1) === "%") {
+    return pt;
+  }
+
+  return `${parseInt(pt) * (96 / 72)}`;
+}
+
 const Box = ({ layoutDefinition, computedLayout }: PropType) => {
   const [currentLayout, setCurrentLayout] = useState<any>();
 
   // barcode 생길때만
   const barcodeRef = useCallback((node) => {
-    if (node && layoutDefinition.type === "barcode") {
+    if (node && layoutDefinition.type === "Barcode") {
       JsBarcode(node, "12345", {
-        format: "pharmacode",
-        width: 2, // 사이 간격을 말하는 듯
-        height: 50, // 그리고 20 플러스 됨
+        format: "code128",
+        width: 1, // 사이 간격을 말하는 듯
+        height: 30, // 높이 동일하게 주도록 계산해야할듯.
+        textMargin: 0,
+        margin: 0,
+        displayValue: false,
       }); // 이거 크기를 동적으로 구할 수 있으려나?
     }
   }, []);
 
-  useEffect(() => {
-    // calculateLayout(layoutDefinition.flex);
-  }, [layoutDefinition]);
+  function setterName(key) {
+    return `set${key[0].toUpperCase()}${key.substr(1)}`;
+  }
 
-  //   if (!currentLayout) {
-  //     return <></>;
-  //   }
+  function createYogaNodes(layoutDefinition) {
+    const curNode = Node.create();
+    const { flex } = layoutDefinition;
+
+    if (flex?.size) {
+      curNode[setterName("width")](convertToPx(flex.size.width));
+      curNode[setterName("height")](convertToPx(flex.size.height));
+    }
+
+    if (flex?.flex_direction) {
+      curNode[setterName("flexDirection")](flex.flex_direction);
+    }
+
+    // padding, margin, postion, border같은것 처리
+    ["margin", "padding"].forEach((key) => {
+      ["top", "right", "bottom", "left"].forEach((dir) => {
+        try {
+          curNode[setterName(key)](
+            `EDGE_${dir.toUpperCase()}`,
+            layoutDefinition.flex[key][dir]
+          );
+        } catch (e) {}
+      });
+    });
+    // flex처리
+    curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
+
+    // 해당 Node의 children을 여기에 넣어서 계산을 한다.
+    (layoutDefinition.children || [])
+      .map(createYogaNodes)
+      .forEach((node, i) => {
+        curNode.insertChild(node, i);
+      });
+
+    return curNode;
+  }
+
+  function getComputedLayout(node) {
+    return {
+      ...node.getComputedLayout(),
+      curNode: node,
+      children: Array.from({ length: node.getChildCount() }, (_, i) => i).map(
+        (i) => getComputedLayout(node.getChild(i))
+      ),
+    };
+  }
+
+  function calculateLayout(layoutDefinition) {
+    const curYogaNode = createYogaNodes(layoutDefinition);
+    curYogaNode.calculateLayout(
+      convertToPx(layoutDefinition.flex?.size?.width) || "100%",
+      convertToPx(layoutDefinition.flex?.size?.height) || "100%",
+      layoutDefinition.flex?.flex_direction || yoga.DIRECTION_LTR // width, height는 꼭 있고 direction은 없으면 LTR
+    );
+    setCurrentLayout(getComputedLayout(curYogaNode));
+  }
+
+  useEffect(() => {
+    calculateLayout(layoutDefinition);
+  }, [layoutDefinition]);
 
   // 현재의 computedLayout
   const curComputedLayout = computedLayout || currentLayout; // props로 받은것(부모가 계산한 layout) | 없으면(root 같은 경우) 현재 자기 값.
   const { left, top, width, height, children } = curComputedLayout || {
     left: 0,
     top: 0,
-    width: 200,
-    height: 200,
+    width: 0,
+    height: 0,
   };
 
   return (
@@ -49,6 +120,7 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
       }}
     >
       {layoutDefinition.type === "Barcode" && <svg ref={barcodeRef}></svg>}
+      {layoutDefinition?.text?.text && <div>{layoutDefinition.text.text}</div>}
       {(children || []).map((child, index) => {
         return (
           <Box
