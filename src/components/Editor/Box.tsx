@@ -9,13 +9,14 @@ interface PropType {
 
 function convertToPx(pt: any): any {
   if (!pt) {
-    return undefined;
+    return "auto";
   }
+
   if (pt.charAt(pt.length - 1) === "%") {
     return pt;
   }
 
-  return `${parseInt(pt) * (96 / 72)}`;
+  return `${parseInt(pt) * (96 / 72) * 2}`;
 }
 
 const Box = ({ layoutDefinition, computedLayout }: PropType) => {
@@ -43,10 +44,9 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
     const curNode = Node.create();
     const { flex } = layoutDefinition;
 
-    if (flex?.size) {
-      curNode[setterName("width")](convertToPx(flex.size.width));
-      curNode[setterName("height")](convertToPx(flex.size.height));
-    }
+    // auto
+    curNode[setterName("width")](convertToPx(flex?.size?.width));
+    curNode[setterName("height")](convertToPx(flex?.size?.height));
 
     if (flex?.flex_direction) {
       curNode[setterName("flexDirection")](flex.flex_direction);
@@ -57,12 +57,13 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
       ["top", "right", "bottom", "left"].forEach((dir) => {
         try {
           curNode[setterName(key)](
-            `EDGE_${dir.toUpperCase()}`,
+            yoga[`EDGE_${dir.toUpperCase()}`],
             layoutDefinition.flex[key][dir]
           );
         } catch (e) {}
       });
     });
+
     // flex처리
     curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
 
@@ -89,8 +90,8 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
   function calculateLayout(layoutDefinition) {
     const curYogaNode = createYogaNodes(layoutDefinition);
     curYogaNode.calculateLayout(
-      convertToPx(layoutDefinition.flex?.size?.width) || "100%",
-      convertToPx(layoutDefinition.flex?.size?.height) || "100%",
+      convertToPx(layoutDefinition.flex?.size?.width),
+      convertToPx(layoutDefinition.flex?.size?.height),
       layoutDefinition.flex?.flex_direction || yoga.DIRECTION_LTR // width, height는 꼭 있고 direction은 없으면 LTR
     );
     setCurrentLayout(getComputedLayout(curYogaNode));
@@ -109,6 +110,7 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
     height: 0,
   };
 
+  console.log("curComputedLayout", curComputedLayout);
   return (
     <div
       className="Box"
@@ -119,7 +121,11 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
         height,
       }}
     >
-      {layoutDefinition.type === "Barcode" && <svg ref={barcodeRef}></svg>}
+      {layoutDefinition.type === "Barcode" && (
+        <div>
+          <svg ref={barcodeRef}></svg>
+        </div>
+      )}
       {layoutDefinition?.text?.text && <div>{layoutDefinition.text.text}</div>}
       {(children || []).map((child, index) => {
         return (

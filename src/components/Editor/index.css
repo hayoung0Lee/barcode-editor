@@ -10,7 +10,7 @@
     left, top, width, height를 구해주고,
     그걸 화면에다가 보여주면 된다.
     */
-    position: relative;
+    /* position: relative; */
 }
 
 .Box {
@@ -19,7 +19,7 @@
     var(--box-border-size) var(--box-border-size) 0 0 var(--box-border-color),
     var(--box-border-size) 0 0 0 var(--box-border-color) inset,
     0  var(--box-border-size) 0 0 var(--box-border-color) inset;
-    position: absolute;
+    /* position: absolute; */
     /* background-color: white; */
     /* word-break: break-all;
     overflow: hidden; */
