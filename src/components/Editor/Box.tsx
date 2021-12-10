@@ -52,13 +52,17 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
       curNode[setterName("flexDirection")](flex.flex_direction);
     }
 
+    if (flex?.flex_grow) {
+      curNode[setterName("flexGrow")](flex.flex_grow);
+    }
+
     // padding, margin, postion, border같은것 처리
     ["margin", "padding"].forEach((key) => {
       ["top", "right", "bottom", "left"].forEach((dir) => {
         try {
           curNode[setterName(key)](
             yoga[`EDGE_${dir.toUpperCase()}`],
-            layoutDefinition.flex[key][dir]
+            flex[key][dir]
           );
         } catch (e) {}
       });
