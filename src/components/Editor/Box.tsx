@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import yoga, { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 
@@ -23,7 +17,6 @@ function handleSize(size: any, zoom: any = 1): any {
     return size;
   }
 
-  // return `${parseInt(size) * (96 / 72)}`;
   return `${parseInt(size) * zoom}`;
 }
 
@@ -33,37 +26,25 @@ function setterName(key) {
 
 const Box = ({ layoutDefinition, computedLayout }: PropType) => {
   const [currentLayout, setCurrentLayout] = useState<any>();
-  const [calcHeight, setCalcHeight] = useState<any>();
-
-  // text
-  const textRef = useCallback((node) => {
-    console.log("node", node.clientHeight);
-    setCalcHeight(node.clientHeight);
-  }, []);
-
-  // barcode 생길때만
-  const barcodeRef = useCallback((node) => {
-    if (node && layoutDefinition.type === "Barcode") {
-      JsBarcode(node, "12345", {
-        format: "code128",
-        width: 0.5, // 사이 간격을 말하는 듯
-        height: 20, // 이게 꽉채우는 방식으로 구현하기
-        textMargin: 0,
-        margin: 0,
-        displayValue: false,
-      }); // 이거 크기를 동적으로 구할 수 있으려나?
-    }
-  }, []);
 
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
-    // auto
     // type별 크기 계산 로직 만들기
     if (type === "Container") {
       curNode[setterName("width")](handleSize(flex?.size?.width));
       curNode[setterName("height")](handleSize(flex?.size?.height));
-    } else if (type === "Text") {
-      // 하위 div의 높이를 가지고 세팅한다. 과연 가능할것인가!?
+    } else {
+      curNode[setterName("width")](handleSize(flex?.size?.width));
+
+      if (type === "Text") {
+        if (flex?.size?.height) {
+          curNode[setterName("height")](handleSize(flex?.size?.height));
+        } else {
+          curNode[setterName("height")](
+            `${layoutDefinition.text.text_size * 1.2}`
+          );
+        }
+      }
     }
   }
 
@@ -125,7 +106,7 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
     setCurrentLayout(getComputedLayout(curYogaNode));
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     calculateLayout(layoutDefinition);
   }, [layoutDefinition]);
 
@@ -138,6 +119,21 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
     height: 0,
   };
 
+  const barcodeRef = useCallback(
+    (node) => {
+      if (node && layoutDefinition.type === "Barcode") {
+        JsBarcode(node, "12345", {
+          format: "code128",
+          textMargin: 0,
+          margin: 0,
+          displayValue: false,
+        });
+      }
+      // setUpdate((prev) => !prev);
+    },
+    [height]
+  );
+
   return (
     <div
       className="Box"
@@ -145,16 +141,24 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
         left,
         top,
         width,
-        height: height === 0 ? calcHeight : height,
+        height,
       }}
     >
       {layoutDefinition.type === "Barcode" && (
-        <div>
-          <svg ref={barcodeRef}></svg>
-        </div>
+        <svg ref={barcodeRef} className="Barcode"></svg>
       )}
       {layoutDefinition?.text?.text && (
-        <div ref={textRef}>{layoutDefinition.text.text}</div>
+        <div
+          style={{
+            fontSize: layoutDefinition.text.text_size,
+            lineHeight: 1.2,
+            textAlign: layoutDefinition.text.text_align,
+            fontFamily: layoutDefinition.text.font_family,
+            fontWeight: layoutDefinition.text.font_weight,
+          }}
+        >
+          {layoutDefinition.text.text}
+        </div>
       )}
       {(children || []).map((child, index) => {
         return (

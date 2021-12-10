@@ -8,7 +8,7 @@ const Editor = () => (
     <Box
       layoutDefinition={{
         type: "Container",
-        flex: { size: { width: "200", height: "200" } },
+        flex: { size: { width: "100", height: "80" } },
         children: [barcode],
       }}
       computedLayout={null}

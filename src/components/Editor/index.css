@@ -21,3 +21,9 @@
     0  var(--box-border-size) 0 0 var(--box-border-color) inset;
     position: absolute; /* 하위 Box는 또 부모를 기준으로 layout된다. */
 }
+
+
+.Barcode {
+    width: 100%;
+    height: 100%;
+}

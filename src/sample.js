@@ -37,21 +37,21 @@ const barcode = {
                 font_family: font,
             },
         },
-        // {
-        //     type: "Barcode",
-        //     flex: {
-        //         margin: {
-        //             top: "5",
-        //             right: "0",
-        //             bottom: "5",
-        //             left: "0",
-        //         },
-        //         flex_grow: 1,
-        //     },
-        //     barcode: {
-        //         text: "{{barcode}}",
-        //     },
-        // },
+        {
+            type: "Barcode",
+            flex: {
+                margin: {
+                    top: "5",
+                    right: "0",
+                    bottom: "5",
+                    left: "0",
+                },
+                flex_grow: 1,
+            },
+            barcode: {
+                text: "{{barcode}}",
+            },
+        },
         {
             type: "Text",
             text: {
