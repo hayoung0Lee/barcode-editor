@@ -13,6 +13,6 @@ body {
 }
 
 :root {
-  --box-border-size: 1px;
+  --box-border-size: 0.1px;
   --box-border-color: black;
 }

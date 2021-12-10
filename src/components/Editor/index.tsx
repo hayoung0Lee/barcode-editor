@@ -3,16 +3,20 @@ import Box from "./Box";
 import { barcode } from "../../sample";
 
 // 숫자는 다 px이다.
+const StartSize = { width: "300px", height: "300px" };
+
 const Editor = () => (
   <div className="Editor">
-    <Box
-      layoutDefinition={{
-        type: "Container",
-        flex: { size: { width: "100", height: "80" } },
-        children: [barcode],
-      }}
-      computedLayout={null}
-    ></Box>
+    <div className="BoxWrapper" style={StartSize}>
+      <Box
+        layoutDefinition={{
+          type: "Container",
+          flex: { size: StartSize },
+          children: [barcode],
+        }}
+        computedLayout={null}
+      ></Box>
+    </div>
   </div>
 );
 

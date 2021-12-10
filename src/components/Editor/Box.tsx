@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import yoga, { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 

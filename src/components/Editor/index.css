@@ -10,7 +10,13 @@
     left, top, width, height를 구해주고,
     그걸 화면에다가 보여주면 된다.
     */
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.BoxWrapper{
+    position:relative;
 }
 
 .Box {
