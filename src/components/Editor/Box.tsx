@@ -16,7 +16,7 @@ function convertToPx(pt: any): any {
     return pt;
   }
 
-  return `${parseInt(pt) * (96 / 72) * 2}`;
+  return `${parseInt(pt) * (96 / 72)}`;
 }
 
 const Box = ({ layoutDefinition, computedLayout }: PropType) => {
@@ -27,8 +27,8 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
     if (node && layoutDefinition.type === "Barcode") {
       JsBarcode(node, "12345", {
         format: "code128",
-        width: 1, // 사이 간격을 말하는 듯
-        height: 30, // 높이 동일하게 주도록 계산해야할듯.
+        width: 0.5, // 사이 간격을 말하는 듯
+        height: 20, // 높이 동일하게 주도록 계산해야할듯.
         textMargin: 0,
         margin: 0,
         displayValue: false,
@@ -42,11 +42,24 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
 
   function createYogaNodes(layoutDefinition) {
     const curNode = Node.create();
-    const { flex } = layoutDefinition;
+    const { type, flex } = layoutDefinition;
 
     // auto
-    curNode[setterName("width")](convertToPx(flex?.size?.width));
-    curNode[setterName("height")](convertToPx(flex?.size?.height));
+    // type별 크기 계산 로직 만들기
+    if (type === "Container") {
+      curNode[setterName("width")](convertToPx(flex?.size?.width));
+      curNode[setterName("height")](convertToPx(flex?.size?.height));
+    } else if (type === "Text") {
+      curNode[setterName("width")]("auto");
+      curNode[setterName("height")](
+        `${parseInt(layoutDefinition.text.text_size) + 1}`
+      );
+    } else if (type === "Barcode") {
+      curNode[setterName("width")]("auto");
+      curNode[setterName("height")]("20");
+    } else if (type === "Qrcode") {
+      //qrcode
+    }
 
     if (flex?.flex_direction) {
       curNode[setterName("flexDirection")](flex.flex_direction);
@@ -114,7 +127,6 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
     height: 0,
   };
 
-  console.log("curComputedLayout", curComputedLayout);
   return (
     <div
       className="Box"

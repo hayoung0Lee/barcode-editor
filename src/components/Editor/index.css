@@ -24,3 +24,7 @@
     /* word-break: break-all;
     overflow: hidden; */
 }
+
+div {
+    font-size: 10px;
+}
