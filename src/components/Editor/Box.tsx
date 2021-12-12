@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import yoga, { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 
@@ -25,7 +25,11 @@ function setterName(key) {
 }
 
 const Box = ({ layoutDefinition, computedLayout }: PropType) => {
+  // children 변경하고, 상위 컴포넌트에 뭐 변하면 다시 계산할 수도 있는데, React.memo를 써야할지도?
+  // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
   const [currentLayout, setCurrentLayout] = useState<any>();
+
+  console.log("Box", layoutDefinition);
 
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
@@ -173,4 +177,7 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
   );
 };
 
-export default Box;
+// React.memo는 shallow comparison를 한다. 두번째 인자로 custom comparison 로직을 추가할 수 있다. https://blog.openreplay.com/improving-react-application-performance-react-memo-vs-usememo
+// Shallow compare does check for equality. When comparing scalar values (numbers, strings) it compares their values. When comparing objects, it does not compare their attributes - only their references are compared (e.g. "do they point to same object?").
+// 지금 구조에는 attribute 뭐 바뀌면 걔를 싹 갈아쳐야할것같은디? 그래도 전체 다 계산하는건 오바니까 일단 add, remove 테스트할때는 이렇게 둔다.
+export default React.memo(Box);

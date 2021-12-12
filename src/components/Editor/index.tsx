@@ -1,23 +1,19 @@
 import "./index.css";
 import Box from "./Box";
-import { barcode } from "../../sample";
+import { StartSize } from "../../utils/constants";
+import { useState } from "react";
 
-// 숫자는 다 px이다.
-const StartSize = { width: "300px", height: "300px" };
+const Editor = ({ layoutDefinition }) => {
+  const [check, setCheck] = useState(false);
 
-const Editor = () => (
-  <div className="Editor">
-    <div className="BoxWrapper" style={StartSize}>
-      <Box
-        layoutDefinition={{
-          type: "Container",
-          flex: { size: StartSize },
-          children: [barcode],
-        }}
-        computedLayout={null}
-      ></Box>
+  console.log("check");
+  return (
+    <div className="Editor" onClick={() => setCheck((prev) => !prev)}>
+      <div className="BoxWrapper" style={StartSize}>
+        <Box layoutDefinition={layoutDefinition} computedLayout={null}></Box>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Editor;

@@ -1,5 +1,7 @@
 import "./index.css";
 
-const SideBar = () => <div className="SideBar">SideBar</div>;
+const SideBar = ({ onAdd, onRemove }) => {
+  return <div className="SideBar">SideBar</div>;
+};
 
 export default SideBar;
