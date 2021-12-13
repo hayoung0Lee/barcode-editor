@@ -79,6 +79,7 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
 
     // flex처리
     curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
+    curNode.setFlexWrap(yoga.WRAP_WRAP);
 
     // 해당 Node의 children을 여기에 넣어서 계산을 한다.
     (layoutDefinition.children || [])
@@ -180,4 +181,5 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
 // React.memo는 shallow comparison를 한다. 두번째 인자로 custom comparison 로직을 추가할 수 있다. https://blog.openreplay.com/improving-react-application-performance-react-memo-vs-usememo
 // Shallow compare does check for equality. When comparing scalar values (numbers, strings) it compares their values. When comparing objects, it does not compare their attributes - only their references are compared (e.g. "do they point to same object?").
 // 지금 구조에는 attribute 뭐 바뀌면 걔를 싹 갈아쳐야할것같은디? 그래도 전체 다 계산하는건 오바니까 일단 add, remove 테스트할때는 이렇게 둔다.
+// 이거 뭐 업데이트되면 업데이트됬다고 해쉬같은걸로 비교하게 못하나
 export default React.memo(Box);
