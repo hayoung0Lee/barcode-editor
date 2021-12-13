@@ -79,7 +79,7 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
 
     // flex처리
     curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
-    curNode.setFlexWrap(yoga.WRAP_WRAP);
+    curNode.setFlexWrap(yoga.WRAP_WRAP); // 필요한건가? 일단 넣어봄
 
     // 해당 Node의 children을 여기에 넣어서 계산을 한다.
     (layoutDefinition.children || [])
