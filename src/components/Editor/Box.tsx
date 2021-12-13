@@ -182,4 +182,5 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
 // Shallow compare does check for equality. When comparing scalar values (numbers, strings) it compares their values. When comparing objects, it does not compare their attributes - only their references are compared (e.g. "do they point to same object?").
 // 지금 구조에는 attribute 뭐 바뀌면 걔를 싹 갈아쳐야할것같은디? 그래도 전체 다 계산하는건 오바니까 일단 add, remove 테스트할때는 이렇게 둔다.
 // 이거 뭐 업데이트되면 업데이트됬다고 해쉬같은걸로 비교하게 못하나
+// 이거 Ramda쓰면 다 바뀌기 때매 머 다른걸로 비교해야함 지금 렌더링 장난아님~
 export default React.memo(Box);
