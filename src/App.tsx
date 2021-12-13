@@ -30,12 +30,6 @@ function reducer(state, action) {
 }
 
 function App() {
-  // onAddContainer: addChildNode
-  // onAddText
-  // onAddBarcode
-  // onAdd: type별로 나누기, children은 Container만 가지도록 함.
-  // onRemove: remove selected Node
-
   const [labelState, dispatch] = useReducer(reducer, {
     type: "Container",
     flex: { size: StartSize, flex_direction: "column" },
@@ -43,6 +37,10 @@ function App() {
   });
 
   function onAdd() {
+    // onAddContainer: addChildNode
+    // onAddText
+    // onAddBarcode
+    // onAdd: type별로 나누기, children은 Container만 가지도록 함.
     // 일단은 무조건 100 * 100을 추가합니다.
     // 이거 뭔가 이렇게 거지처럼 갈순없다.
     const defaultPath = ["children"]; // root를 말함. ex) ["children" 0 "children"] root의 첫번째 children, ["children" 1 "chidren" 2 "children"] root의 첫번째 children의 두번째 children
@@ -58,6 +56,19 @@ function App() {
         },
       },
     });
+  }
+
+  function onRemove() {
+    // onRemove: remove selected Node
+  }
+
+  function onUpdate() {
+    // flex값 변경
+    // contents값 변경
+  }
+
+  function onUpdateSelectedPath() {
+    // 지금 선택된 path를 핸들링
   }
 
   return (
