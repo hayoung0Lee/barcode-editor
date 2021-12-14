@@ -40,7 +40,7 @@ const Box = ({
   const [currentLayout, setCurrentLayout] = useState<any>();
 
   // console.log("Box", layoutDefinition);
-  console.log("Path", path);
+  // console.log("Path", path);
 
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
@@ -50,7 +50,6 @@ const Box = ({
       curNode[setterName("height")](handleSize(flex?.size?.height));
     } else {
       curNode[setterName("width")](handleSize(flex?.size?.width));
-
       if (type === "Text") {
         if (flex?.size?.height) {
           curNode[setterName("height")](handleSize(flex?.size?.height));
@@ -60,13 +59,15 @@ const Box = ({
           );
         }
       }
+
+      if (type === "Barcode") {
+        // 바코드면 container를 width, height대로 하던가, 아니면 flex-grow한다?
+      }
     }
   }
 
   function handleFlex(curNode, layoutDefinition) {
     const { flex } = layoutDefinition;
-
-    setNodeSize(curNode, layoutDefinition);
 
     // padding, margin, postion, border같은것 처리
     ["margin", "padding"].forEach((key) => {
@@ -142,6 +143,10 @@ const Box = ({
   function createYogaNodes(layoutDefinition) {
     const curNode = Node.create();
 
+    // node의 크기 계산.
+    // type별로 다르게 계산, text는 글자크기에 맞춰서 비례한다. barcode는 무조건 stretch로 하거나 그럴듯.
+    setNodeSize(curNode, layoutDefinition);
+
     // setFlex
     handleFlex(curNode, layoutDefinition);
 
@@ -202,7 +207,6 @@ const Box = ({
           displayValue: false,
         });
       }
-      // setUpdate((prev) => !prev);
     },
     [height]
   );
