@@ -63,11 +63,9 @@ const Box = ({
     }
   }
 
-  function createYogaNodes(layoutDefinition) {
-    const curNode = Node.create();
+  function handleFlex(curNode, layoutDefinition) {
     const { flex } = layoutDefinition;
 
-    // setFlex
     setNodeSize(curNode, layoutDefinition);
 
     // padding, margin, postion, border같은것 처리
@@ -139,7 +137,15 @@ const Box = ({
     // flex처리
     curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
     curNode.setFlexWrap(yoga.WRAP_WRAP); // 필요한건가? 일단 넣어봄
+  }
 
+  function createYogaNodes(layoutDefinition) {
+    const curNode = Node.create();
+
+    // setFlex
+    handleFlex(curNode, layoutDefinition);
+
+    // handleChildren
     // 해당 Node의 children을 여기에 넣어서 계산을 한다.
     (layoutDefinition.children || [])
       .map(createYogaNodes)
