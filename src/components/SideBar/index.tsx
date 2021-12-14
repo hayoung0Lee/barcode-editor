@@ -5,6 +5,7 @@ const SideBar = ({ onAdd, onRemove, exportLabel }) => {
     <div className="SideBar">
       SideBar
       <button onClick={onAdd}>onAdd</button>
+      <button onClick={onRemove}>onRemove</button>
       <button onClick={exportLabel}>exportLabel</button>
     </div>
   );

@@ -16,22 +16,33 @@ function appendAtPath(state, { selectedPath, node }) {
   }
 }
 
+function removeAtPath(state, { selectedPath }) {
+  try {
+    // root의 경우 [] 이렇게라 지울수가 없구만. ["children" 0] 이렇게면 그 path를 지운다.
+    return R.dissocPath(selectedPath, state);
+  } catch (err) {
+    console.error("removeAtPath에서 에러남", err);
+    return state;
+  }
+}
+
 function reducer(state, action) {
   switch (action.type) {
     // add
     case "ADD_CONTAINER":
       return appendAtPath(state, action.payload);
     // remove
+    case "REMOVE":
+      return removeAtPath(state, action.payload);
 
     // update
-
     default:
       return state;
   }
 }
 
 function App() {
-  const [selectedPath, onUpdateSelectedPath] = useState<any>(["children"]);
+  const [selectedPath, onUpdateSelectedPath] = useState<any>([]);
   const [labelState, dispatch] = useReducer(reducer, {
     type: "Container",
     flex: { size: StartSize, flex_direction: "column" },
@@ -53,15 +64,21 @@ function App() {
         selectedPath,
         node: {
           type: "Container",
-          flex: { size: { width: "100", height: "100" } },
+          flex: { size: { width: "100px", height: "100px" } },
           children: [],
         },
       },
     });
   }
 
-  function onRemove() {
+  function onRemove({ selectedPath }) {
     // onRemove: remove selected Node
+    dispatch({
+      type: "REMOVE",
+      payload: {
+        selectedPath,
+      },
+    });
   }
 
   function onUpdate() {
@@ -83,7 +100,7 @@ function App() {
       />
       <SideBar
         onAdd={() => onAdd({ selectedPath })}
-        onRemove={() => null}
+        onRemove={() => onRemove({ selectedPath })}
         exportLabel={exportLabel}
       />
     </div>

@@ -123,7 +123,9 @@ const Box = ({
   }
 
   useEffect(() => {
-    calculateLayout(layoutDefinition);
+    if (layoutDefinition) {
+      calculateLayout(layoutDefinition);
+    }
   }, [layoutDefinition]);
 
   // 현재의 computedLayout
@@ -149,6 +151,10 @@ const Box = ({
     },
     [height]
   );
+
+  if (!layoutDefinition) {
+    return <div></div>;
+  }
 
   return (
     <div
