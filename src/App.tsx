@@ -69,6 +69,10 @@ function App() {
     // contents값 변경
   }
 
+  function exportLabel() {
+    console.log("createdLabel", JSON.stringify(labelState));
+  }
+
   return (
     <div className="App">
       <Editor
@@ -77,7 +81,11 @@ function App() {
         selectedPath={selectedPath}
         onUpdateSelectedPath={onUpdateSelectedPath}
       />
-      <SideBar onAdd={() => onAdd({ selectedPath })} onRemove={() => null} />
+      <SideBar
+        onAdd={() => onAdd({ selectedPath })}
+        onRemove={() => null}
+        exportLabel={exportLabel}
+      />
     </div>
   );
 }
