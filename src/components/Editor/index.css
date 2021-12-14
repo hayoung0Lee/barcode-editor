@@ -24,10 +24,17 @@
     0 var(--box-border-size) 0 0 var(--box-border-color),
     var(--box-border-size) var(--box-border-size) 0 0 var(--box-border-color),
     var(--box-border-size) 0 0 0 var(--box-border-color) inset,
-    0  var(--box-border-size) 0 0 var(--box-border-color) inset;
+    0 var(--box-border-size) 0 0 var(--box-border-color) inset;
     position: absolute; /* 하위 Box는 또 부모를 기준으로 layout된다. */
 }
 
+.selected {
+    box-shadow: var(--box-border-size-hover) 0 0 0 var(--box-border-color-hover),
+    0 var(--box-border-size-hover) 0 0 var(--box-border-color-hover),
+    var(--box-border-size-hover) var(--box-border-size-hover) 0 0 var(--box-border-color-hover),
+    var(--box-border-size-hover) 0 0 0 var(--box-border-color-hover) inset,
+    0 var(--box-border-size-hover) 0 0 var(--box-border-color-hover) inset;
+}
 
 .Barcode {
     width: 100%;

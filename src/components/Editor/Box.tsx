@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import yoga, { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
+import * as R from "ramda";
 
 interface PropType {
   layoutDefinition: any;
   computedLayout: any;
+  path: any; // 여기까지 오는 path
+  onUpdateSelectedPath: any;
+  selectedPath: any;
 }
 
 function handleSize(size: any, zoom: any = 1): any {
@@ -24,12 +28,19 @@ function setterName(key) {
   return `set${key[0].toUpperCase()}${key.substr(1)}`;
 }
 
-const Box = ({ layoutDefinition, computedLayout }: PropType) => {
+const Box = ({
+  layoutDefinition,
+  path,
+  computedLayout,
+  onUpdateSelectedPath,
+  selectedPath,
+}: PropType) => {
   // children 변경하고, 상위 컴포넌트에 뭐 변하면 다시 계산할 수도 있는데, React.memo를 써야할지도?
   // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
   const [currentLayout, setCurrentLayout] = useState<any>();
 
-  console.log("Box", layoutDefinition);
+  // console.log("Box", layoutDefinition);
+  console.log("Path", path);
 
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
@@ -141,12 +152,16 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
 
   return (
     <div
-      className="Box"
+      className={`Box ${R.equals(path, selectedPath) ? "selected" : ""}`}
       style={{
         left,
         top,
         width,
         height,
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onUpdateSelectedPath(path);
       }}
     >
       {layoutDefinition.type === "Barcode" && (
@@ -171,6 +186,9 @@ const Box = ({ layoutDefinition, computedLayout }: PropType) => {
             key={index}
             layoutDefinition={layoutDefinition.children[index]} // definition 상의 children
             computedLayout={child} // 여기서 layout 구한거
+            path={[...path, "children", index]} // 여기까지 오는 path임
+            onUpdateSelectedPath={onUpdateSelectedPath}
+            selectedPath={selectedPath}
           />
         );
       })}
