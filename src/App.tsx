@@ -45,7 +45,12 @@ function App() {
   const [selectedPath, onUpdateSelectedPath] = useState<any>([]);
   const [labelState, dispatch] = useReducer(reducer, {
     type: "Container",
-    flex: { size: StartSize, flex_direction: "column" },
+    flex: {
+      size: StartSize,
+      flex_direction: "row",
+      // align_items: "center",
+      // justify_content: "space-between",
+    },
     children: [],
   });
 
@@ -64,7 +69,10 @@ function App() {
         selectedPath,
         node: {
           type: "Container",
-          flex: { size: { width: "100px", height: "100px" } },
+          flex: {
+            size: { width: "100px", height: "100px" },
+            align_self: "center",
+          },
           children: [],
         },
       },
@@ -84,6 +92,42 @@ function App() {
   function onUpdate() {
     // flex값 변경
     // contents값 변경
+    const type = "Container";
+
+    if ("size") {
+      // width,
+      // height
+    }
+
+    if ("margin") {
+      // top, right, bottom, left
+    }
+
+    if ("padding") {
+      // top, right, bottom, left
+    }
+
+    if ("flex_direction") {
+      // row, column, row-reverse, column-reverse
+    }
+
+    if ("flex_grow") {
+      // flex-grow
+    }
+
+    if ("align_items") {
+      // flex-start, flex-end, center, baseline, stretch
+    }
+
+    if ("justify_content") {
+      // flex-start, flex-end, center, space-between, space-around, space-evenly
+    }
+
+    if ("align_self") {
+      // auto, flex-start, flex-end, center, baseline, stretch
+    }
+
+    // flex-wrap을 임의로 넣어둠 curNode.setFlexWrap(yoga.WRAP_WRAP);
   }
 
   function exportLabel() {
