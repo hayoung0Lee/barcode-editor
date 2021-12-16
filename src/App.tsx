@@ -26,6 +26,17 @@ function removeAtPath(state, { selectedPath }) {
   }
 }
 
+function updateAttr(state, { selectedPath, attr, value }) {
+  try {
+    // root의 경우 [] 이렇게라 지울수가 없구만. ["children" 0] 이렇게면 그 path를 지운다.
+    const pathToAttr = [...selectedPath, "flex", attr];
+    return R.assocPath(pathToAttr, value, state);
+  } catch (err) {
+    console.error("updateAttr에서 에러남", err);
+    return state;
+  }
+}
+
 function reducer(state, action) {
   switch (action.type) {
     // add
@@ -34,7 +45,9 @@ function reducer(state, action) {
     // remove
     case "REMOVE":
       return removeAtPath(state, action.payload);
-
+    // update
+    case "UPDATE_FLEX":
+      return updateAttr(state, action.payload);
     // update
     default:
       return state;
@@ -68,7 +81,7 @@ function App() {
         node: {
           type: "Container",
           flex: {
-            size: { width: "100px", height: "100px" },
+            size: { width: "100", height: "100" },
             align_self: "center",
           },
           children: [],
@@ -87,41 +100,42 @@ function App() {
     });
   }
 
-  function onUpdate() {
+  function onUpdate(type, attr, value) {
     // flex값 변경
     // contents값 변경
-    const type = "Container";
+    // const type = "Container";
 
-    if ("size") {
+    if (attr === "size") {
       // width,
       // height
+      dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
     }
 
-    if ("margin") {
+    if (attr === "margin") {
       // top, right, bottom, left
     }
 
-    if ("padding") {
+    if (attr === "padding") {
       // top, right, bottom, left
     }
 
-    if ("flex_direction") {
+    if (attr === "flex_direction") {
       // row, column, row-reverse, column-reverse
     }
 
-    if ("flex_grow") {
+    if (attr === "flex_grow") {
       // flex-grow
     }
 
-    if ("align_items") {
+    if (attr === "align_items") {
       // flex-start, flex-end, center, baseline, stretch
     }
 
-    if ("justify_content") {
+    if (attr === "justify_content") {
       // flex-start, flex-end, center, space-between, space-around, space-evenly
     }
 
-    if ("align_self") {
+    if (attr === "align_self") {
       // auto, flex-start, flex-end, center, baseline, stretch
     }
 
@@ -144,6 +158,7 @@ function App() {
         onAdd={() => onAdd({ selectedPath })}
         onRemove={() => onRemove({ selectedPath })}
         exportLabel={exportLabel}
+        onUpdate={onUpdate}
       />
     </div>
   );
