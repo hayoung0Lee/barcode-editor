@@ -16,6 +16,35 @@ const LabelWrapper = ({ labelName, children }) => {
     </div>
   );
 };
+
+const OptionSelector = ({
+  optionName,
+  options,
+  selectedValue,
+  onClickOption,
+}) => {
+  return (
+    <div>
+      <div>{optionName}</div>
+      {(options || []).map((opt, index) => {
+        return (
+          <button
+            key={index}
+            className={
+              opt === selectedValue
+                ? styles.selectedOption
+                : styles.unSelectedOption
+            }
+            onClick={() => onClickOption(opt)}
+          >
+            {opt}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
   const [size, setSize] = useState(
     selectedFlex.size ? selectedFlex.size : { width: "100", height: "100" }
@@ -39,6 +68,9 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
           right: "0",
           bottom: "0",
         }
+  );
+  const [flexGrow, setFlexGrow] = useState(
+    selectedFlex.flexGrow ? selectedFlex.flexGrow : 0
   );
 
   useEffect(() => {
@@ -65,7 +97,9 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
             bottom: "0",
           }
     );
+    setFlexGrow(selectedFlex.flexGrow ? selectedFlex.flexGrow : 0);
   }, [selectedFlex]);
+
   return (
     <>
       <InputPartition>
@@ -89,7 +123,7 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
         </LabelWrapper>
       </InputPartition>
       <InputPartition>
-        <LabelWrapper labelName="Top">
+        <LabelWrapper labelName="MarginTop">
           <input
             value={margin.top}
             onChange={(e) =>
@@ -98,7 +132,7 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
             onBlur={() => onUpdateContainer("margin", margin)}
           />
         </LabelWrapper>
-        <LabelWrapper labelName="Left">
+        <LabelWrapper labelName="MarginLeft">
           <input
             value={margin.left}
             onChange={(e) =>
@@ -107,7 +141,7 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
             onBlur={() => onUpdateContainer("margin", margin)}
           />
         </LabelWrapper>
-        <LabelWrapper labelName="Right">
+        <LabelWrapper labelName="MarginRight">
           <input
             value={margin.right}
             onChange={(e) =>
@@ -116,7 +150,7 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
             onBlur={() => onUpdateContainer("margin", margin)}
           />
         </LabelWrapper>
-        <LabelWrapper labelName="Bottom">
+        <LabelWrapper labelName="MarginBottom">
           <input
             value={margin.bottom}
             onChange={(e) =>
@@ -164,6 +198,81 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
           />
         </LabelWrapper>
       </InputPartition>
+
+      <InputPartition>
+        <LabelWrapper labelName="flexGrow">
+          <input
+            value={flexGrow}
+            onChange={(e) =>
+              setFlexGrow(
+                e.target.value === "" ? "" : Number.parseFloat(e.target.value)
+              )
+            }
+            onBlur={() => onUpdateContainer("flex_grow", flexGrow)}
+          />
+        </LabelWrapper>
+      </InputPartition>
+      <InputPartition>
+        <OptionSelector
+          optionName="FlexDirection"
+          options={["row", "column", "row-reverse", "column-reverse"]}
+          selectedValue={
+            selectedFlex["flex_direction"]
+              ? selectedFlex["flex_direction"]
+              : "row"
+          }
+          onClickOption={(opt) => onUpdateContainer("flex_direction", opt)}
+        ></OptionSelector>
+      </InputPartition>
+      <InputPartition>
+        <OptionSelector
+          optionName="AlignItems"
+          options={["flex-start", "flex-end", "center", "baseline", "stretch"]}
+          selectedValue={
+            selectedFlex["align_items"]
+              ? selectedFlex["align_items"]
+              : "stretch"
+          }
+          onClickOption={(opt) => onUpdateContainer("align_items", opt)}
+        ></OptionSelector>
+      </InputPartition>
+      <InputPartition>
+        <OptionSelector
+          optionName="JustifyContent"
+          options={[
+            "flex-start",
+            "flex-end",
+            "center",
+            "space-between",
+            "space-around",
+            "space-evenly",
+          ]}
+          selectedValue={
+            selectedFlex["justify_content"]
+              ? selectedFlex["justify_content"]
+              : "flex-start"
+          }
+          onClickOption={(opt) => onUpdateContainer("justify_content", opt)}
+        ></OptionSelector>
+      </InputPartition>
+
+      <InputPartition>
+        <OptionSelector
+          optionName="AlignSelf"
+          options={[
+            "auto",
+            "flex-start",
+            "flex-end",
+            "center",
+            "baseline",
+            "stretch",
+          ]}
+          selectedValue={
+            selectedFlex["align_self"] ? selectedFlex["align_self"] : "auto"
+          }
+          onClickOption={(opt) => onUpdateContainer("align_self", opt)}
+        ></OptionSelector>
+      </InputPartition>
     </>
   );
 };
@@ -175,10 +284,12 @@ const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
       <button onClick={onAdd}>onAdd</button>
       <button onClick={onRemove}>onRemove</button>
       <button onClick={exportLabel}>exportLabel</button>
-      <ContainerSetter
-        selectedFlex={selectedValue["flex"]}
-        onUpdateContainer={R.partial(onUpdate, ["Container"])}
-      />
+      {selectedValue && selectedValue["flex"] && (
+        <ContainerSetter
+          selectedFlex={selectedValue["flex"]}
+          onUpdateContainer={R.partial(onUpdate, ["Container"])}
+        />
+      )}
     </div>
   );
 };

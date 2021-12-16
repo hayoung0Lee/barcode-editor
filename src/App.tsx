@@ -82,7 +82,6 @@ function App() {
           type: "Container",
           flex: {
             size: { width: "100", height: "100" },
-            align_self: "center",
           },
           children: [],
         },
@@ -105,44 +104,9 @@ function App() {
     // contents값 변경
     // const type = "Container";
     if (type === "Container") {
+      // flex-wrap을 임의로 넣어둠 curNode.setFlexWrap(yoga.WRAP_WRAP);
       dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
     }
-
-    // if (attr === "size") {
-    //   // width,
-    //   // height
-    //   // dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
-    // }
-
-    // if (attr === "margin") {
-    //   // top, right, bottom, left
-    // }
-
-    // if (attr === "padding") {
-    //   // top, right, bottom, left
-    // }
-
-    if (attr === "flex_direction") {
-      // row, column, row-reverse, column-reverse
-    }
-
-    if (attr === "flex_grow") {
-      // flex-grow
-    }
-
-    if (attr === "align_items") {
-      // flex-start, flex-end, center, baseline, stretch
-    }
-
-    if (attr === "justify_content") {
-      // flex-start, flex-end, center, space-between, space-around, space-evenly
-    }
-
-    if (attr === "align_self") {
-      // auto, flex-start, flex-end, center, baseline, stretch
-    }
-
-    // flex-wrap을 임의로 넣어둠 curNode.setFlexWrap(yoga.WRAP_WRAP);
   }
 
   function exportLabel() {
