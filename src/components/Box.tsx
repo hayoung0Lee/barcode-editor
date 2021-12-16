@@ -40,9 +40,6 @@ const Box = ({
   // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
   const [currentLayout, setCurrentLayout] = useState<any>();
 
-  // console.log("Box", layoutDefinition);
-  // console.log("Path", path);
-
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
     // type별 크기 계산 로직 만들기
@@ -184,9 +181,7 @@ const Box = ({
   }
 
   useEffect(() => {
-    if (layoutDefinition) {
-      calculateLayout(layoutDefinition);
-    }
+    calculateLayout(layoutDefinition);
   }, [layoutDefinition]);
 
   // 현재의 computedLayout
@@ -211,10 +206,6 @@ const Box = ({
     },
     [height]
   );
-
-  if (!layoutDefinition) {
-    return <div></div>;
-  }
 
   return (
     <div
@@ -249,24 +240,23 @@ const Box = ({
         </div>
       )}
       {(children || []).map((child, index) => {
-        return (
-          <Box
-            key={index}
-            layoutDefinition={layoutDefinition.children[index]} // definition 상의 children
-            computedLayout={child} // 여기서 layout 구한거
-            path={[...path, "children", index]} // 여기까지 오는 path임
-            onUpdateSelectedPath={onUpdateSelectedPath}
-            selectedPath={selectedPath}
-          />
-        );
+        if (layoutDefinition.children[index]) {
+          return (
+            <Box
+              key={index}
+              layoutDefinition={layoutDefinition.children[index]} // definition 상의 children
+              computedLayout={child} // 여기서 layout 구한거
+              path={[...path, "children", index]} // 여기까지 오는 path임
+              onUpdateSelectedPath={onUpdateSelectedPath}
+              selectedPath={selectedPath}
+            />
+          );
+        } else {
+          return null;
+        }
       })}
     </div>
   );
 };
 
-// React.memo는 shallow comparison를 한다. 두번째 인자로 custom comparison 로직을 추가할 수 있다. https://blog.openreplay.com/improving-react-application-performance-react-memo-vs-usememo
-// Shallow compare does check for equality. When comparing scalar values (numbers, strings) it compares their values. When comparing objects, it does not compare their attributes - only their references are compared (e.g. "do they point to same object?").
-// 지금 구조에는 attribute 뭐 바뀌면 걔를 싹 갈아쳐야할것같은디? 그래도 전체 다 계산하는건 오바니까 일단 add, remove 테스트할때는 이렇게 둔다.
-// 이거 뭐 업데이트되면 업데이트됬다고 해쉬같은걸로 비교하게 못하나
-// 이거 Ramda쓰면 다 바뀌기 때매 머 다른걸로 비교해야함 지금 렌더링 장난아님~
 export default React.memo(Box);
