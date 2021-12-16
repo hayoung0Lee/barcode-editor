@@ -182,6 +182,7 @@ const Box = ({
 
   useEffect(() => {
     calculateLayout(layoutDefinition);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layoutDefinition]);
 
   // 현재의 computedLayout
