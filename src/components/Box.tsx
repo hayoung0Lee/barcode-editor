@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import yoga, { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 import * as R from "ramda";
+import styles from "./Box.module.css";
 
 interface PropType {
   layoutDefinition: any;
@@ -217,7 +218,9 @@ const Box = ({
 
   return (
     <div
-      className={`Box ${R.equals(path, selectedPath) ? "selected" : ""}`}
+      className={`${styles.box} ${
+        R.equals(path, selectedPath) ? styles.selected : ""
+      }`}
       style={{
         left,
         top,
@@ -230,7 +233,7 @@ const Box = ({
       }}
     >
       {layoutDefinition.type === "Barcode" && (
-        <svg ref={barcodeRef} className="Barcode"></svg>
+        <svg ref={barcodeRef} className={styles.barcode}></svg>
       )}
       {layoutDefinition?.text?.text && (
         <div

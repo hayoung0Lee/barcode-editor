@@ -15,7 +15,6 @@ body {
 :root {
   --box-border-size: 0.1px;
   --box-border-color: black;
-
   --box-border-size-hover: 0.2px;
   --box-border-color-hover: blue;
 }

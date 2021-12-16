@@ -1,7 +1,7 @@
-.App {
+.app {
     display: flex;
 }
 
-.App > div {
+.app > div {
     flex-shrink: 0;
 }

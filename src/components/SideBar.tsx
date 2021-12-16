@@ -1,8 +1,8 @@
-import "./index.css";
+import styles from "./SideBar.module.css";
 
 const SideBar = ({ onAdd, onRemove, exportLabel }) => {
   return (
-    <div className="SideBar">
+    <div className={styles.sideBar}>
       SideBar
       <button onClick={onAdd}>onAdd</button>
       <button onClick={onRemove}>onRemove</button>

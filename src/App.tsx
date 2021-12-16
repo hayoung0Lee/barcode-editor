@@ -1,4 +1,4 @@
-import "./App.css";
+import styles from "./App.module.css";
 import Editor from "./components/Editor";
 import SideBar from "./components/SideBar";
 import { useState, useReducer } from "react";
@@ -8,7 +8,7 @@ import * as R from "ramda";
 function appendAtPath(state, { selectedPath, node }) {
   try {
     const pathToChildren = [...selectedPath, "children"];
-    const currentChildren = R.path(pathToChildren, state);
+    const currentChildren: any = R.path(pathToChildren, state);
     return R.assocPath(pathToChildren, R.append(node, currentChildren), state);
   } catch (err) {
     console.error("appendAtPath에서 에러남", err);
@@ -48,8 +48,6 @@ function App() {
     flex: {
       size: StartSize,
       flex_direction: "row",
-      // align_items: "center",
-      // justify_content: "space-between",
     },
     children: [],
   });
@@ -135,7 +133,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className={styles.app}>
       <Editor
         layoutDefinition={labelState}
         path={[]}

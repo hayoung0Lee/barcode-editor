@@ -1,6 +1,6 @@
-import "./index.css";
+import styles from "./Editor.module.css";
 import Box from "./Box";
-import { StartSize } from "../../utils/constants";
+import { StartSize } from "../utils/constants";
 
 const Editor = ({
   layoutDefinition,
@@ -9,8 +9,8 @@ const Editor = ({
   selectedPath,
 }) => {
   return (
-    <div className="Editor">
-      <div className="BoxWrapper" style={StartSize}>
+    <div className={styles.editor}>
+      <div className={styles.boxWrapper} style={StartSize}>
         <Box
           layoutDefinition={layoutDefinition}
           path={path}

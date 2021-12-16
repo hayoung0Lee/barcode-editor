@@ -1,25 +1,4 @@
-.Editor {
-    border-radius: 4px;
-    background-color: #dcdcdc;
-    width: 600px;
-    height: 600px;
-    margin: 50px;
-    padding: 20px;
-    /*
-    여기 relative 기준으로 yoga node가 화면에서의
-    left, top, width, height를 구해주고,
-    그걸 화면에다가 보여주면 된다.
-    */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.BoxWrapper{
-    position:relative;
-}
-
-.Box {
+.box {
     box-shadow: var(--box-border-size) 0 0 0 var(--box-border-color),
     0 var(--box-border-size) 0 0 var(--box-border-color),
     var(--box-border-size) var(--box-border-size) 0 0 var(--box-border-color),
@@ -36,7 +15,7 @@
     0 var(--box-border-size-hover) 0 0 var(--box-border-color-hover) inset;
 }
 
-.Barcode {
+.barcode {
     width: 100%;
     height: 100%;
 }
