@@ -104,20 +104,23 @@ function App() {
     // flex값 변경
     // contents값 변경
     // const type = "Container";
-
-    if (attr === "size") {
-      // width,
-      // height
+    if (type === "Container") {
       dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
     }
 
-    if (attr === "margin") {
-      // top, right, bottom, left
-    }
+    // if (attr === "size") {
+    //   // width,
+    //   // height
+    //   // dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
+    // }
 
-    if (attr === "padding") {
-      // top, right, bottom, left
-    }
+    // if (attr === "margin") {
+    //   // top, right, bottom, left
+    // }
+
+    // if (attr === "padding") {
+    //   // top, right, bottom, left
+    // }
 
     if (attr === "flex_direction") {
       // row, column, row-reverse, column-reverse
@@ -155,6 +158,7 @@ function App() {
         onUpdateSelectedPath={onUpdateSelectedPath}
       />
       <SideBar
+        selectedValue={R.path(selectedPath, labelState)}
         onAdd={() => onAdd({ selectedPath })}
         onRemove={() => onRemove({ selectedPath })}
         exportLabel={exportLabel}

@@ -66,6 +66,7 @@ const Box = ({
 
   function handleFlex(curNode, layoutDefinition) {
     const { flex } = layoutDefinition;
+    console.log("flex", flex);
 
     // padding, margin, postion, border같은것 처리
     ["margin", "padding"].forEach((key) => {
