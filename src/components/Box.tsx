@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import yoga, { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 import * as R from "ramda";
@@ -42,6 +42,7 @@ const Box = ({
   // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
   const [currentLayout, setCurrentLayout] = useState<any>();
   const [_, forceUpdate] = useState<any>(false);
+  const startRef = useRef<any>({ x: undefined, y: undefined });
 
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
@@ -50,6 +51,7 @@ const Box = ({
       curNode[setterName("width")](handleSize(flex?.size?.width));
       curNode[setterName("height")](handleSize(flex?.size?.height));
     } else {
+      // text도 원래거에 채워 넣도록 구현하는게 나을것같기도?
       curNode[setterName("width")](handleSize(flex?.size?.width));
       if (type === "Text") {
         if (flex?.size?.height) {
@@ -218,9 +220,22 @@ const Box = ({
         e.stopPropagation();
         onUpdateSelectedPath(path);
       }}
-      // double클릭하고 나면 margin을 보여주기?
-      // dnd를 어떻게 처리할 것이냐.
-      // size도 간단하게 수정가능하게 하기
+      draggable={true}
+      onDragStart={(e) => {
+        startRef.current = { x: e.clientX, y: e.clientY };
+        requestAnimationFrame(() => {
+          const element: any = e.target;
+          element.classList.add(styles.hide);
+        });
+      }}
+      onDragEnd={(e) => {
+        onDragBox({
+          x: e.clientX - startRef.current.x,
+          y: e.clientY - startRef.current.y,
+        });
+        const element: any = e.target;
+        element.classList.remove(styles.hide);
+      }}
     >
       {layoutDefinition.type === "Barcode" && (
         <svg ref={barcodeRef} className={styles.barcode}></svg>
@@ -238,6 +253,7 @@ const Box = ({
           {layoutDefinition.text.text}
         </div>
       )}
+
       {(children || []).map((child, index) => {
         if (layoutDefinition.children[index]) {
           return (

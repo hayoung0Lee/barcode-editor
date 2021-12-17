@@ -130,9 +130,23 @@ function App() {
     }
   }
 
-  function onDragBox({ value }) {
+  function onDragBox({ x, y }) {
     // margin값만 조정하도록 한다.
-    onUpdate("Container", "margin", value);
+    const currentMargin: any = R.path(
+      [...selectedPath, "flex", "margin"],
+      labelState
+    ) || {
+      top: "0",
+      left: "0",
+      right: "0",
+      bottom: "0",
+    };
+
+    onUpdate("UPDATE_FLEX", "margin", {
+      ...currentMargin,
+      left: `${+currentMargin.left + x}`,
+      top: `${+currentMargin.top + y}`,
+    });
   }
 
   function exportLabel() {
