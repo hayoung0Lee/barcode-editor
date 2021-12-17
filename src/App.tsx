@@ -64,20 +64,26 @@ function App() {
     children: [],
   });
 
-  function onAdd({ selectedPath }) {
-    dispatch({
-      type: "ADD_CONTAINER",
-      payload: {
-        selectedPath,
-        node: {
-          type: "Container",
-          flex: {
-            size: { width: "50%", height: "50%" },
+  function onAdd({ type, selectedPath }) {
+    if (type === "Container") {
+      dispatch({
+        type: "ADD_CONTAINER",
+        payload: {
+          selectedPath,
+          node: {
+            type: "Container",
+            flex: {
+              size: { width: "50%", height: "50%" },
+            },
+            children: [],
           },
-          children: [],
         },
-      },
-    });
+      });
+    } else if (type === "Barcode") {
+      // container 내부에 flex-grow: 1해서 때려 넣기, width, height 100%
+    } else if (type === "Text") {
+      // text 사이즈 설정같은거 나중에 할 수 있도록 만들기 이것도 이건 걍 container처럼 옵션 만든다.
+    }
   }
 
   function onRemove({ selectedPath }) {
@@ -120,7 +126,7 @@ function App() {
       />
       <SideBar
         selectedValue={R.path(selectedPath, labelState)}
-        onAdd={() => onAdd({ selectedPath })}
+        onAdd={(type) => onAdd({ type, selectedPath })}
         onRemove={() => onRemove({ selectedPath })}
         exportLabel={exportLabel}
         onUpdate={onUpdate}

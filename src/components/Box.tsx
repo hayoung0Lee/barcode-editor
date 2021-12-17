@@ -10,6 +10,7 @@ interface PropType {
   path: any; // 여기까지 오는 path
   onUpdateSelectedPath: any;
   selectedPath: any;
+  onDragBox: any;
 }
 
 function handleSize(size: any, zoom: any = 1): any {
@@ -35,6 +36,7 @@ const Box = ({
   computedLayout,
   onUpdateSelectedPath,
   selectedPath,
+  onDragBox,
 }: PropType) => {
   // children 변경하고, 상위 컴포넌트에 뭐 변하면 다시 계산할 수도 있는데, React.memo를 써야할지도?
   // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
@@ -171,12 +173,7 @@ const Box = ({
 
   function calculateLayout(layoutDefinition) {
     const curYogaNode = createYogaNodes(layoutDefinition);
-    curYogaNode
-      .calculateLayout
-      // handleSize(layoutDefinition.flex?.size?.width),
-      // handleSize(layoutDefinition.flex?.size?.height)
-      // layoutDefinition.flex?.flex_direction || yoga.DIRECTION_LTR // width, height는 꼭 있고 direction은 없으면 LTR
-      ();
+    curYogaNode.calculateLayout();
     setCurrentLayout(getComputedLayout(curYogaNode));
   }
 
@@ -223,6 +220,9 @@ const Box = ({
         e.stopPropagation();
         onUpdateSelectedPath(path);
       }}
+      // double클릭하고 나면 margin을 보여주기?
+      // dnd를 어떻게 처리할 것이냐.
+      // size도 간단하게 수정가능하게 하기
     >
       {layoutDefinition.type === "Barcode" && (
         <svg ref={barcodeRef} className={styles.barcode}></svg>
@@ -250,6 +250,7 @@ const Box = ({
               path={[...path, "children", index]} // 여기까지 오는 path임
               onUpdateSelectedPath={onUpdateSelectedPath}
               selectedPath={selectedPath}
+              onDragBox={onDragBox}
             />
           );
         } else {

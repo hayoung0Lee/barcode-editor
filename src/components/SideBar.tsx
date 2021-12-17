@@ -279,15 +279,18 @@ const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
   return (
     <div className={styles.sideBar}>
       SideBar
-      <button onClick={onAdd}>onAdd</button>
+      <button onClick={R.partial(onAdd, ["Container"])}>onAddContainer</button>
+      <button onClick={R.partial(onAdd, ["Barcode"])}>onAddBarcode</button>
       <button onClick={onRemove}>onRemove</button>
       <button onClick={exportLabel}>exportLabel</button>
-      {selectedValue && selectedValue["flex"] && (
-        <ContainerSetter
-          selectedFlex={selectedValue["flex"]}
-          onUpdateContainer={R.partial(onUpdate, ["Container"])}
-        />
-      )}
+      {selectedValue &&
+        selectedValue["flex"] &&
+        selectedValue["type"] === "Container" && ( // container일때만 뭐 설정하게 하기. 나머지는 걍 다 고정시킬거.
+          <ContainerSetter
+            selectedFlex={selectedValue["flex"]}
+            onUpdateContainer={R.partial(onUpdate, ["Container"])}
+          />
+        )}
     </div>
   );
 };
