@@ -36,10 +36,30 @@ function updateAttr(state, { selectedPath, attr, value }) {
   }
 }
 
+function convertToBarcode(state, { selectedPath }) {
+  try {
+    const currentNode: any = R.path(selectedPath, state);
+    return R.assocPath(
+      selectedPath,
+      {
+        type: "Barcode",
+        flex: currentNode.flex,
+        barcode: {
+          text: "{{barcode}}",
+        },
+      },
+      state
+    );
+  } catch (err) {
+    console.error("convertToBarcode에서 에러남", err);
+    return state;
+  }
+}
+
 function reducer(state, action) {
   switch (action.type) {
     // add
-    case "ADD_CONTAINER":
+    case "ADD":
       return appendAtPath(state, action.payload);
     // remove
     case "REMOVE":
@@ -47,6 +67,8 @@ function reducer(state, action) {
     // update
     case "UPDATE_FLEX":
       return updateAttr(state, action.payload);
+    case "CONVERT_TO_BARCODE":
+      return convertToBarcode(state, action.payload);
     // update
     default:
       return state;
@@ -67,7 +89,7 @@ function App() {
   function onAdd({ type, selectedPath }) {
     if (type === "Container") {
       dispatch({
-        type: "ADD_CONTAINER",
+        type: "ADD",
         payload: {
           selectedPath,
           node: {
@@ -96,13 +118,15 @@ function App() {
     });
   }
 
-  function onUpdate(type, attr, value) {
+  function onUpdate(action, attr, value) {
     // flex값 변경
     // contents값 변경
     // const type = "Container";
-    if (type === "Container") {
+    if (action === "UPDATE_FLEX") {
       // flex-wrap을 임의로 넣어둠 curNode.setFlexWrap(yoga.WRAP_WRAP);
       dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
+    } else if (action === "CONVERT_TO_BARCODE") {
+      dispatch({ type: "CONVERT_TO_BARCODE", payload: { selectedPath } });
     }
   }
 

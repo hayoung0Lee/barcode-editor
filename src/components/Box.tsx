@@ -41,11 +41,12 @@ const Box = ({
   // children 변경하고, 상위 컴포넌트에 뭐 변하면 다시 계산할 수도 있는데, React.memo를 써야할지도?
   // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
   const [currentLayout, setCurrentLayout] = useState<any>();
+  const [_, forceUpdate] = useState<any>(false);
 
   function setNodeSize(curNode: any, layoutDefinition: any) {
     const { type, flex } = layoutDefinition;
     // type별 크기 계산 로직 만들기
-    if (type === "Container") {
+    if (type === "Container" || type === "Barcode") {
       curNode[setterName("width")](handleSize(flex?.size?.width));
       curNode[setterName("height")](handleSize(flex?.size?.height));
     } else {
@@ -58,10 +59,6 @@ const Box = ({
             `${layoutDefinition.text.text_size * 1.2}`
           );
         }
-      }
-
-      if (type === "Barcode") {
-        // 바코드면 container를 width, height대로 하던가, 아니면 flex-grow한다?
       }
     }
   }
@@ -194,15 +191,16 @@ const Box = ({
   const barcodeRef = useCallback(
     (node) => {
       if (node && layoutDefinition.type === "Barcode") {
-        JsBarcode(node, "12345", {
+        JsBarcode(node, layoutDefinition.barcode.text, {
           format: "code128",
           textMargin: 0,
           margin: 0,
           displayValue: false,
         });
+        forceUpdate((prev) => !prev);
       }
     },
-    [height]
+    [layoutDefinition]
   );
 
   return (

@@ -72,9 +72,7 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
   );
 
   useEffect(() => {
-    setSize(
-      selectedFlex.size ? selectedFlex.size : { width: "100", height: "100" }
-    );
+    setSize(selectedFlex.size);
     setMargin(
       selectedFlex.margin
         ? selectedFlex.margin
@@ -95,7 +93,7 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
             bottom: "0",
           }
     );
-    setFlexGrow(selectedFlex.flexGrow ? selectedFlex.flexGrow : 0);
+    setFlexGrow(selectedFlex.flex_grow ? selectedFlex.flex_grow : 0);
   }, [selectedFlex]);
 
   return (
@@ -275,20 +273,51 @@ const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
   );
 };
 
+const BarcodeSetter = ({ selectedFlex, onUpdateContainer }) => {
+  const [size, setSize] = useState(selectedFlex.size);
+
+  useEffect(() => {
+    setSize(selectedFlex.size);
+  }, [selectedFlex]);
+  return (
+    <InputPartition>
+      <LabelWrapper labelName={"Width"}>
+        <input
+          value={size.width}
+          onChange={(e) =>
+            setSize((prev) => ({ ...prev, width: e.target.value }))
+          }
+          onBlur={() => onUpdateContainer("size", size)}
+        />
+      </LabelWrapper>
+      <LabelWrapper labelName={"Height"}>
+        <input
+          value={size.height}
+          onChange={(e) =>
+            setSize((prev) => ({ ...prev, height: e.target.value }))
+          }
+          onBlur={() => onUpdateContainer("size", size)}
+        />
+      </LabelWrapper>
+    </InputPartition>
+  );
+};
+
 const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
   return (
     <div className={styles.sideBar}>
       SideBar
       <button onClick={R.partial(onAdd, ["Container"])}>onAddContainer</button>
-      <button onClick={R.partial(onAdd, ["Barcode"])}>onAddBarcode</button>
+      <button onClick={R.partial(onUpdate, ["CONVERT_TO_BARCODE"])}>
+        FillWithBarcode
+      </button>
       <button onClick={onRemove}>onRemove</button>
       <button onClick={exportLabel}>exportLabel</button>
       {selectedValue &&
-        selectedValue["flex"] &&
-        selectedValue["type"] === "Container" && ( // container일때만 뭐 설정하게 하기. 나머지는 걍 다 고정시킬거.
+        selectedValue["flex"] && ( // container일때만 뭐 설정하게 하기. 나머지는 걍 다 고정시킬거.
           <ContainerSetter
             selectedFlex={selectedValue["flex"]}
-            onUpdateContainer={R.partial(onUpdate, ["Container"])}
+            onUpdateContainer={R.partial(onUpdate, ["UPDATE_FLEX"])}
           />
         )}
     </div>
