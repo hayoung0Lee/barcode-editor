@@ -13,3 +13,4 @@
 ## Drag
 
 - drag and drop: http://tcpschool.com/html/html5_api_dragAndDrop
+- https://www.npmjs.com/package/react-draggable
