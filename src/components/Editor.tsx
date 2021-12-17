@@ -1,22 +1,29 @@
 import styles from "./Editor.module.css";
 import Box from "./Box";
-import { StartSize } from "../utils/constants";
 
 const Editor = ({
   layoutDefinition,
   path,
   onUpdateSelectedPath,
   selectedPath,
+  onDragBox,
 }) => {
   return (
     <div className={styles.editor}>
-      <div className={styles.boxWrapper} style={StartSize}>
+      <div
+        style={{
+          width: `${layoutDefinition.flex.size.width}px`,
+          height: `${layoutDefinition.flex.size.height}px`,
+          position: "relative",
+        }}
+      >
         <Box
           layoutDefinition={layoutDefinition}
           path={path}
           computedLayout={null}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}
+          onDragBox={onDragBox}
         ></Box>
       </div>
     </div>

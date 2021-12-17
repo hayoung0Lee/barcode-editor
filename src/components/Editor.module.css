@@ -1,15 +1,11 @@
 .editor {
-    border-radius: 4px;
-    background-color: #dcdcdc;
-    width: 600px;
-    height: 600px;
-    margin: 50px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.boxWrapper {
-    position:relative;
+  border-radius: 4px;
+  background-color: #dcdcdc;
+  width: 600px;
+  height: 600px;
+  margin: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }

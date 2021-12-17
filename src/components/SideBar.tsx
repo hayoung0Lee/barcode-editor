@@ -46,9 +46,7 @@ const OptionSelector = ({
 };
 
 const ContainerSetter = ({ selectedFlex, onUpdateContainer }) => {
-  const [size, setSize] = useState(
-    selectedFlex.size ? selectedFlex.size : { width: "100", height: "100" }
-  );
+  const [size, setSize] = useState(selectedFlex.size);
   const [margin, setMargin] = useState(
     selectedFlex.margin
       ? selectedFlex.margin
