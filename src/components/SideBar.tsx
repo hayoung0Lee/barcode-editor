@@ -311,6 +311,9 @@ const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
       <button onClick={R.partial(onUpdate, ["CONVERT_TO_BARCODE"])}>
         FillWithBarcode
       </button>
+      <button onClick={R.partial(onUpdate, ["CONVERT_TO_CONTAINER"])}>
+        ConvertToContainer
+      </button>
       <button onClick={onRemove}>onRemove</button>
       <button onClick={exportLabel}>exportLabel</button>
       {selectedValue &&

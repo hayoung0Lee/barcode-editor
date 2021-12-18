@@ -192,7 +192,7 @@ const Box = ({
 
   const barcodeRef = useCallback(
     (node) => {
-      if (node && layoutDefinition.type === "Barcode") {
+      if (node && layoutDefinition && layoutDefinition.type === "Barcode") {
         JsBarcode(node, layoutDefinition.barcode.text, {
           format: "code128",
           textMargin: 0,
@@ -237,7 +237,7 @@ const Box = ({
         element.classList.remove(styles.hide);
       }}
     >
-      {layoutDefinition.type === "Barcode" && (
+      {layoutDefinition?.type === "Barcode" && (
         <svg ref={barcodeRef} className={styles.barcode}></svg>
       )}
       {layoutDefinition?.text?.text && (
@@ -255,7 +255,7 @@ const Box = ({
       )}
 
       {(children || []).map((child, index) => {
-        if (layoutDefinition.children[index]) {
+        if (layoutDefinition?.children[index]) {
           return (
             <Box
               key={index}

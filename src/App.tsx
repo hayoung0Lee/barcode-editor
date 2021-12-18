@@ -56,6 +56,24 @@ function convertToBarcode(state, { selectedPath }) {
   }
 }
 
+function convertToContainer(state, { selectedPath }) {
+  try {
+    const currentNode: any = R.path(selectedPath, state);
+    return R.assocPath(
+      selectedPath,
+      {
+        type: "Container",
+        flex: currentNode.flex,
+        children: [],
+      },
+      state
+    );
+  } catch (err) {
+    console.error("convertToContainer에서 에러남", err);
+    return state;
+  }
+}
+
 function reducer(state, action) {
   switch (action.type) {
     // add
@@ -69,6 +87,8 @@ function reducer(state, action) {
       return updateAttr(state, action.payload);
     case "CONVERT_TO_BARCODE":
       return convertToBarcode(state, action.payload);
+    case "CONVERT_TO_CONTAINER":
+      return convertToContainer(state, action.payload);
     // update
     default:
       return state;
@@ -127,6 +147,8 @@ function App() {
       dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
     } else if (action === "CONVERT_TO_BARCODE") {
       dispatch({ type: "CONVERT_TO_BARCODE", payload: { selectedPath } });
+    } else if (action === "CONVERT_TO_CONTAINER") {
+      dispatch({ type: "CONVERT_TO_CONTAINER", payload: { selectedPath } });
     }
   }
 
@@ -141,7 +163,6 @@ function App() {
       right: "0",
       bottom: "0",
     };
-
     onUpdate("UPDATE_FLEX", "margin", {
       ...currentMargin,
       left: `${+currentMargin.left + x}`,
