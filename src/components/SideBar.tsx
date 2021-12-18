@@ -308,6 +308,9 @@ const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
     <div className={styles.sideBar}>
       SideBar
       <button onClick={R.partial(onAdd, ["Container"])}>onAddContainer</button>
+      <button onClick={R.partial(onUpdate, ["CONVERT_TO_TEXT"])}>
+        FillWithText
+      </button>
       <button onClick={R.partial(onUpdate, ["CONVERT_TO_BARCODE"])}>
         FillWithBarcode
       </button>
@@ -323,6 +326,9 @@ const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
             onUpdateContainer={R.partial(onUpdate, ["UPDATE_FLEX"])}
           />
         )}
+      {/*
+      FLEX 설정하는 화면, Barcode, Text 설정하는 화면을 구성하기
+      */}
     </div>
   );
 };

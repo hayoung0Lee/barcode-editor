@@ -5,6 +5,8 @@ import { useState, useReducer } from "react";
 import { StartSize } from "./utils/constants";
 import * as R from "ramda";
 
+const font = "Roboto,Noto Sans KR,Noto Sans SC,Noto Sans TC,Noto Sans JP";
+
 function appendAtPath(state, { selectedPath, node }) {
   try {
     const pathToChildren = [...selectedPath, "children"];
@@ -74,6 +76,39 @@ function convertToContainer(state, { selectedPath }) {
   }
 }
 
+function convertToText(state, { selectedPath }) {
+  try {
+    const currentNode: any = R.path(selectedPath, state);
+    const textData = {
+      text: "12312312312312text입니다 아주자우자우자ㅜㄹ잗ㄹㅈㄷㄹㅈㄷㄹㅈㄷㄹㅁㄴㅇㄹㅈㄷㄹㅈㄷ",
+      text_size: 10,
+      text_max_line: 3,
+      text_align: "left",
+      font_weight: "bold",
+      font_family: font,
+    };
+
+    return R.assocPath(
+      selectedPath,
+      {
+        type: "Text",
+        flex: {
+          ...currentNode.flex,
+          size: {
+            ...currentNode.flex.size,
+            height: `${textData.text_size * 1.2 * textData.text_max_line} `,
+          },
+        },
+        text: { ...textData },
+      },
+      state
+    );
+  } catch (err) {
+    console.error("convertToContainer에서 에러남", err);
+    return state;
+  }
+}
+
 function reducer(state, action) {
   switch (action.type) {
     // add
@@ -87,6 +122,8 @@ function reducer(state, action) {
       return updateAttr(state, action.payload);
     case "CONVERT_TO_BARCODE":
       return convertToBarcode(state, action.payload);
+    case "CONVERT_TO_TEXT":
+      return convertToText(state, action.payload);
     case "CONVERT_TO_CONTAINER":
       return convertToContainer(state, action.payload);
     // update
@@ -121,10 +158,6 @@ function App() {
           },
         },
       });
-    } else if (type === "Barcode") {
-      // container 내부에 flex-grow: 1해서 때려 넣기, width, height 100%
-    } else if (type === "Text") {
-      // text 사이즈 설정같은거 나중에 할 수 있도록 만들기 이것도 이건 걍 container처럼 옵션 만든다.
     }
   }
 
@@ -147,6 +180,8 @@ function App() {
       dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
     } else if (action === "CONVERT_TO_BARCODE") {
       dispatch({ type: "CONVERT_TO_BARCODE", payload: { selectedPath } });
+    } else if (action === "CONVERT_TO_TEXT") {
+      dispatch({ type: "CONVERT_TO_TEXT", payload: { selectedPath } });
     } else if (action === "CONVERT_TO_CONTAINER") {
       dispatch({ type: "CONVERT_TO_CONTAINER", payload: { selectedPath } });
     }

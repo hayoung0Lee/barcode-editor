@@ -248,6 +248,11 @@ const Box = ({
             textAlign: layoutDefinition.text.text_align,
             fontFamily: layoutDefinition.text.font_family,
             fontWeight: layoutDefinition.text.font_weight,
+            WebkitLineClamp: layoutDefinition.text.text_max_line,
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {layoutDefinition.text.text}
