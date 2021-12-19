@@ -4,51 +4,30 @@ import SideBar from "./components/SideBar";
 import { useState, useReducer } from "react";
 import { StartSize } from "./utils/constants";
 import * as R from "ramda";
-
-function appendAtPath(state, { selectedPath, node }) {
-  try {
-    const pathToChildren = [...selectedPath, "children"];
-    const currentChildren: any = R.path(pathToChildren, state);
-    return R.assocPath(pathToChildren, R.append(node, currentChildren), state);
-  } catch (err) {
-    console.error("appendAtPath에서 에러남", err);
-    return state;
-  }
-}
-
-function removeAtPath(state, { selectedPath }) {
-  try {
-    // root의 경우 [] 이렇게라 지울수가 없구만. ["children" 0] 이렇게면 그 path를 지운다.
-    return R.dissocPath(selectedPath, state);
-  } catch (err) {
-    console.error("removeAtPath에서 에러남", err);
-    return state;
-  }
-}
-
-function updateAttr(state, { selectedPath, attr, value }) {
-  try {
-    // root의 경우 [] 이렇게라 지울수가 없구만. ["children" 0] 이렇게면 그 path를 지운다.
-    const pathToAttr = [...selectedPath, "flex", attr];
-    return R.assocPath(pathToAttr, value, state);
-  } catch (err) {
-    console.error("updateAttr에서 에러남", err);
-    return state;
-  }
-}
+import Menu from "./components/Menu";
+import {
+  appendAtPath,
+  removeAtPath,
+  updateAttr,
+  convertToBarcode,
+  convertToContainer,
+  convertToText,
+} from "./utils/handler";
 
 function reducer(state, action) {
   switch (action.type) {
-    // add
-    case "ADD_CONTAINER":
+    case "ADD":
       return appendAtPath(state, action.payload);
-    // remove
     case "REMOVE":
       return removeAtPath(state, action.payload);
-    // update
     case "UPDATE_FLEX":
       return updateAttr(state, action.payload);
-    // update
+    case "CONVERT_TO_BARCODE":
+      return convertToBarcode(state, action.payload);
+    case "CONVERT_TO_TEXT":
+      return convertToText(state, action.payload);
+    case "CONVERT_TO_CONTAINER":
+      return convertToContainer(state, action.payload);
     default:
       return state;
   }
@@ -65,32 +44,25 @@ function App() {
     children: [],
   });
 
-  function onAdd({ selectedPath }) {
-    // onAddContainer: addChildNode
-    // onAddText
-    // onAddBarcode
-    // onAdd: type별로 나누기, children은 Container만 가지도록 함.
-    // 일단은 무조건 100 * 100을 추가합니다.
-    // 이거 뭔가 이렇게 거지처럼 갈순없다.
-    // const defaultPath = ["children"]; // root를 말함. ex) ["children" 0 "children"] root의 첫번째 children, ["children" 1 "chidren" 2 "children"] root의 첫번째 children의 두번째 children
-
-    dispatch({
-      type: "ADD_CONTAINER",
-      payload: {
-        selectedPath,
-        node: {
-          type: "Container",
-          flex: {
-            size: { width: "100", height: "100" },
+  function onAdd({ type, selectedPath }) {
+    if (type === "Container") {
+      dispatch({
+        type: "ADD",
+        payload: {
+          selectedPath,
+          node: {
+            type: "Container",
+            flex: {
+              size: { width: "50%", height: "50%" },
+            },
+            children: [],
           },
-          children: [],
         },
-      },
-    });
+      });
+    }
   }
 
   function onRemove({ selectedPath }) {
-    // onRemove: remove selected Node
     dispatch({
       type: "REMOVE",
       payload: {
@@ -99,14 +71,38 @@ function App() {
     });
   }
 
-  function onUpdate(type, attr, value) {
+  function onUpdate(action, attr, value) {
     // flex값 변경
     // contents값 변경
     // const type = "Container";
-    if (type === "Container") {
+    if (action === "UPDATE_FLEX") {
       // flex-wrap을 임의로 넣어둠 curNode.setFlexWrap(yoga.WRAP_WRAP);
       dispatch({ type: "UPDATE_FLEX", payload: { selectedPath, attr, value } });
+    } else if (action === "CONVERT_TO_BARCODE") {
+      dispatch({ type: "CONVERT_TO_BARCODE", payload: { selectedPath } });
+    } else if (action === "CONVERT_TO_TEXT") {
+      dispatch({ type: "CONVERT_TO_TEXT", payload: { selectedPath } });
+    } else if (action === "CONVERT_TO_CONTAINER") {
+      dispatch({ type: "CONVERT_TO_CONTAINER", payload: { selectedPath } });
     }
+  }
+
+  function onDragBox({ x, y }) {
+    // margin값만 조정하도록 한다.
+    const currentMargin: any = R.path(
+      [...selectedPath, "flex", "margin"],
+      labelState
+    ) || {
+      top: "0",
+      left: "0",
+      right: "0",
+      bottom: "0",
+    };
+    onUpdate("UPDATE_FLEX", "margin", {
+      ...currentMargin,
+      left: `${+currentMargin.left + x}`,
+      top: `${+currentMargin.top + y}`,
+    });
   }
 
   function exportLabel() {
@@ -115,15 +111,25 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <Editor
-        layoutDefinition={labelState}
-        path={[]}
-        selectedPath={selectedPath}
-        onUpdateSelectedPath={onUpdateSelectedPath}
-      />
+      <div className={styles.leftMenu}>
+        <Menu
+          selectedValue={R.path(selectedPath, labelState)}
+          onAdd={(type) => onAdd({ type, selectedPath })}
+          onRemove={() => onRemove({ selectedPath })}
+          exportLabel={exportLabel}
+          onUpdate={onUpdate}
+        />
+        <Editor
+          layoutDefinition={labelState}
+          path={[]}
+          selectedPath={selectedPath}
+          onUpdateSelectedPath={onUpdateSelectedPath}
+          onDragBox={onDragBox}
+        />
+      </div>
       <SideBar
         selectedValue={R.path(selectedPath, labelState)}
-        onAdd={() => onAdd({ selectedPath })}
+        onAdd={(type) => onAdd({ type, selectedPath })}
         onRemove={() => onRemove({ selectedPath })}
         exportLabel={exportLabel}
         onUpdate={onUpdate}

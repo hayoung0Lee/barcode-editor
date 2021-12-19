@@ -1,0 +1,9 @@
+.selectedOption {
+  background-color: gray !important;
+  color: white;
+}
+
+.optionName {
+  font-size: 18px;
+  margin-bottom: 5px;
+}

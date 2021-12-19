@@ -13,8 +13,8 @@ body {
 }
 
 :root {
-  --box-border-size: 0.1px;
-  --box-border-color: black;
-  --box-border-size-hover: 0.2px;
-  --box-border-color-hover: blue;
+  --box-border-size: 1px;
+  --box-border-color: rgb(48 56 69 / 20%);
+  --box-border-size-hover: 2px;
+  --box-border-color-hover: #68cfbb;
 }
