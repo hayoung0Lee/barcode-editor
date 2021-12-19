@@ -1,8 +1,17 @@
 import styles from "../css/Button.module.css";
 
-const Button = ({ children, ...props }) => {
+const Button = ({ children, className, ...props }: any) => {
+  if (className) {
+    console.log("styles", className);
+    return (
+      <button {...props} className={`${styles.button} ${className}`}>
+        {children}
+      </button>
+    );
+  }
+
   return (
-    <button className={styles.button} {...props}>
+    <button {...props} className={styles.button}>
       {children}
     </button>
   );

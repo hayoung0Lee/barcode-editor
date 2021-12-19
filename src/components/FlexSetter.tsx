@@ -75,6 +75,18 @@ const FlexSetter = ({ selectedFlex, onUpdateContainer }) => {
             onBlur={() => onUpdateContainer("size", size)}
           />
         </LabelWrapper>
+        <LabelWrapper labelName="Flex Grow">
+          <input
+            type="number"
+            value={flexGrow}
+            onChange={(e) =>
+              setFlexGrow(
+                e.target.value === "" ? "" : Number.parseFloat(e.target.value)
+              )
+            }
+            onBlur={() => onUpdateContainer("flex_grow", flexGrow)}
+          />
+        </LabelWrapper>
       </InputPartition>
       <InputPartition title="Margin">
         <LabelWrapper labelName="Top">
@@ -152,7 +164,7 @@ const FlexSetter = ({ selectedFlex, onUpdateContainer }) => {
           />
         </LabelWrapper>
       </InputPartition>
-      <InputPartition>
+      {/* <InputPartition>
         <LabelWrapper labelName="Flex Grow">
           <input
             type="number"
@@ -165,10 +177,9 @@ const FlexSetter = ({ selectedFlex, onUpdateContainer }) => {
             onBlur={() => onUpdateContainer("flex_grow", flexGrow)}
           />
         </LabelWrapper>
-      </InputPartition>
-      <InputPartition>
+      </InputPartition> */}
+      <InputPartition title="Flex Direction">
         <OptionSelector
-          optionName="Flex Direction"
           options={["row", "column", "row-reverse", "column-reverse"]}
           selectedValue={
             selectedFlex["flex_direction"]
@@ -178,10 +189,9 @@ const FlexSetter = ({ selectedFlex, onUpdateContainer }) => {
           onClickOption={(opt) => onUpdateContainer("flex_direction", opt)}
         ></OptionSelector>
       </InputPartition>
-      <InputPartition>
+      <InputPartition title="Align Items">
         <OptionSelector
-          optionName="Align Items"
-          options={["flex-start", "flex-end", "center", "baseline", "stretch"]}
+          options={["stretch", "flex-start", "flex-end", "center", "baseline"]}
           selectedValue={
             selectedFlex["align_items"]
               ? selectedFlex["align_items"]
@@ -190,9 +200,8 @@ const FlexSetter = ({ selectedFlex, onUpdateContainer }) => {
           onClickOption={(opt) => onUpdateContainer("align_items", opt)}
         ></OptionSelector>
       </InputPartition>
-      <InputPartition>
+      <InputPartition title="Justify Content">
         <OptionSelector
-          optionName="Justify Content"
           options={[
             "flex-start",
             "flex-end",
@@ -209,9 +218,8 @@ const FlexSetter = ({ selectedFlex, onUpdateContainer }) => {
           onClickOption={(opt) => onUpdateContainer("justify_content", opt)}
         ></OptionSelector>
       </InputPartition>
-      <InputPartition>
+      <InputPartition title="Align Self">
         <OptionSelector
-          optionName="Align Self"
           options={[
             "auto",
             "flex-start",

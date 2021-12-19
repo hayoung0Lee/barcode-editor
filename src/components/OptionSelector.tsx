@@ -1,27 +1,24 @@
 import styles from "../css/OptionSelector.module.css";
+import Button from "./Button";
 
-const OptionSelector = ({
-  optionName,
-  options,
-  selectedValue,
-  onClickOption,
-}) => {
+const OptionSelector = ({ options, selectedValue, onClickOption }) => {
   return (
     <div>
-      <div>{optionName}</div>
       {(options || []).map((opt, index) => {
         return (
-          <button
+          <Button
             key={index}
-            className={
-              opt === selectedValue
-                ? styles.selectedOption
-                : styles.unSelectedOption
-            }
+            className={opt === selectedValue ? styles.selectedOption : ""}
+            style={{
+              minWidth: "105px",
+              height: "25px",
+              marginBottom: "2px",
+              marginRight: "2px",
+            }}
             onClick={() => onClickOption(opt)}
           >
             {opt}
-          </button>
+          </Button>
         );
       })}
     </div>

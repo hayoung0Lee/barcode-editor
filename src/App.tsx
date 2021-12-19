@@ -111,7 +111,7 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <div>
+      <div className={styles.leftMenu}>
         <Menu
           selectedValue={R.path(selectedPath, labelState)}
           onAdd={(type) => onAdd({ type, selectedPath })}
