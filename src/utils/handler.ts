@@ -91,7 +91,7 @@ function convertToText(state, { selectedPath }) {
           ...currentNode.flex,
           size: {
             ...currentNode.flex.size,
-            height: `${textData.text_size * 1.2 * textData.text_max_line} `,
+            height: `${textData.text_size * 1.2 * textData.text_max_line}`,
           },
         },
         text: { ...textData },
