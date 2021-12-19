@@ -1,4 +1,10 @@
 .inputPartition {
-  border: 1px solid black;
   margin: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.title {
+  font-size: 18px;
+  margin-bottom: 5px;
 }

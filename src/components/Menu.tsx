@@ -1,29 +1,32 @@
 import * as R from "ramda";
 import styles from "../css/Menu.module.css";
+import Button from "./Button";
 
-const Button = ({ onClick, children }) => {
+const MenuButton = ({ children, ...props }) => {
   return (
-    <button className={styles.button} onClick={onClick}>
+    <Button {...props} style={{ width: "180px", height: "30px" }}>
       {children}
-    </button>
+    </Button>
   );
 };
 
 const Menu = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
   return (
     <div className={styles.buttonGroup}>
-      <Button onClick={R.partial(onAdd, ["Container"])}>Add Container</Button>
-      <Button onClick={onRemove}>Remove</Button>
-      <Button onClick={R.partial(onUpdate, ["CONVERT_TO_TEXT"])}>
+      <MenuButton onClick={R.partial(onAdd, ["Container"])}>
+        Add Container
+      </MenuButton>
+      <MenuButton onClick={onRemove}>Remove</MenuButton>
+      <MenuButton onClick={R.partial(onUpdate, ["CONVERT_TO_TEXT"])}>
         Convert to Text
-      </Button>
-      <Button onClick={R.partial(onUpdate, ["CONVERT_TO_BARCODE"])}>
+      </MenuButton>
+      <MenuButton onClick={R.partial(onUpdate, ["CONVERT_TO_BARCODE"])}>
         Convert to Barcode
-      </Button>
-      <Button onClick={R.partial(onUpdate, ["CONVERT_TO_CONTAINER"])}>
+      </MenuButton>
+      <MenuButton onClick={R.partial(onUpdate, ["CONVERT_TO_CONTAINER"])}>
         Convert To Container
-      </Button>
-      <Button onClick={exportLabel}>Export Label</Button>
+      </MenuButton>
+      <MenuButton onClick={exportLabel}>Export Label</MenuButton>
     </div>
   );
 };

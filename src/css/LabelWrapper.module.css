@@ -1,0 +1,18 @@
+.label {
+  display: flex;
+  margin-bottom: 4px;
+  align-items: center;
+}
+
+.labelName {
+  width: 80px;
+  font-size: 14px;
+  line-height: 1.2;
+  display: block;
+}
+
+.label > input {
+  height: 20px;
+  font-size: 14px;
+  width: 50px;
+}

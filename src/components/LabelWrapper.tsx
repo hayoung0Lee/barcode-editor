@@ -2,12 +2,10 @@ import styles from "../css/LabelWrapper.module.css";
 
 const LabelWrapper = ({ labelName, children }) => {
   return (
-    <div>
-      <label>
-        {labelName}
-        {children}
-      </label>
-    </div>
+    <label className={styles.label}>
+      <span className={styles.labelName}>{labelName}</span>
+      {children}
+    </label>
   );
 };
 
