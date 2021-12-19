@@ -1,7 +1,9 @@
 .app {
-    display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .app > div {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }

@@ -1,9 +1,9 @@
 .editor {
   border-radius: 4px;
-  background-color: #dcdcdc;
+  background-color: #e5e5e5;
   width: 600px;
   height: 600px;
-  margin: 50px;
+  margin-right: 50px;
   display: flex;
   justify-content: center;
   align-items: center;

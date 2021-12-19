@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import yoga, { Node } from "yoga-layout-prebuilt";
+import { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 import * as R from "ramda";
 import styles from "./Box.module.css";
-
+import { handleFlex } from "../utils/handler";
 interface PropType {
   layoutDefinition: any;
   computedLayout: any;
@@ -11,23 +11,6 @@ interface PropType {
   onUpdateSelectedPath: any;
   selectedPath: any;
   onDragBox: any;
-}
-
-function handleSize(size: any, zoom: any = 1): any {
-  if (!size) {
-    return "auto";
-  }
-
-  if (size.charAt(size.length - 1) === "%") {
-    // percent인경우
-    return size;
-  }
-
-  return `${parseInt(size) * zoom}`;
-}
-
-function setterName(key) {
-  return `set${key[0].toUpperCase()}${key.substr(1)}`;
 }
 
 const Box = ({
@@ -38,119 +21,28 @@ const Box = ({
   selectedPath,
   onDragBox,
 }: PropType) => {
-  // children 변경하고, 상위 컴포넌트에 뭐 변하면 다시 계산할 수도 있는데, React.memo를 써야할지도?
-  // 근데 내려줄때 json object 에 걍 reference로 넘겨주는건데 어떻게 처리하려나
   const [currentLayout, setCurrentLayout] = useState<any>();
   const [_, forceUpdate] = useState<any>(false);
   const startRef = useRef<any>({ x: undefined, y: undefined });
 
-  function setNodeSize(curNode: any, layoutDefinition: any) {
-    const { type, flex } = layoutDefinition;
-    // type별 크기 계산 로직 만들기
-    if (type === "Container" || type === "Barcode") {
-      curNode[setterName("width")](handleSize(flex?.size?.width));
-      curNode[setterName("height")](handleSize(flex?.size?.height));
-    } else {
-      // text도 원래거에 채워 넣도록 구현하는게 나을것같기도?
-      curNode[setterName("width")](handleSize(flex?.size?.width));
-      if (type === "Text") {
-        if (flex?.size?.height) {
-          curNode[setterName("height")](handleSize(flex?.size?.height));
-        } else {
-          curNode[setterName("height")](
-            `${layoutDefinition.text.text_size * 1.2}`
-          );
-        }
+  const barcodeRef = useCallback(
+    (node) => {
+      if (node && layoutDefinition && layoutDefinition.type === "Barcode") {
+        JsBarcode(node, layoutDefinition.barcode.text, {
+          format: "code128",
+          textMargin: 0,
+          margin: 0,
+          displayValue: false,
+        });
+        forceUpdate((prev) => !prev);
       }
-    }
-  }
-
-  function handleFlex(curNode, layoutDefinition) {
-    const { flex } = layoutDefinition;
-
-    // padding, margin, postion, border같은것 처리
-    ["margin", "padding"].forEach((key) => {
-      ["top", "right", "bottom", "left"].forEach((dir) => {
-        try {
-          curNode[setterName(key)](
-            yoga[`EDGE_${dir.toUpperCase()}`],
-            handleSize(flex[key][dir]) // 값이 있다면 일단 px인걸로 나중에 처리하게
-          );
-        } catch (e) {}
-      });
-    });
-
-    // size와 관련되지 않은 다른 속성들.
-    if (flex?.flex_direction) {
-      const flexDir = {
-        row: yoga.FLEX_DIRECTION_ROW,
-        "row-reverse": yoga.FLEX_DIRECTION_ROW_REVERSE,
-        column: yoga.FLEX_DIRECTION_COLUMN,
-        "column-reverse": yoga.FLEX_DIRECTION_COLUMN_REVERSE,
-      };
-      curNode[setterName("flexDirection")](flexDir[flex.flex_direction]);
-    }
-
-    if (flex?.flex_grow) {
-      // number
-      curNode[setterName("flexGrow")](flex.flex_grow);
-    }
-
-    if (flex?.align_items) {
-      const flexAlignItems = {
-        "flex-start": yoga.ALIGN_FLEX_START,
-        "flex-end": yoga.ALIGN_FLEX_END,
-        center: yoga.ALIGN_CENTER,
-        baseline: yoga.ALIGN_BASELINE,
-        stretch: yoga.ALIGN_STRETCH,
-      };
-      curNode[setterName("alignItems")](flexAlignItems[flex.align_items]);
-    }
-
-    if (flex?.justify_content) {
-      const flexJustifyContent = {
-        "flex-start": yoga.JUSTIFY_FLEX_START,
-        "flex-end": yoga.JUSTIFY_FLEX_END,
-        center: yoga.JUSTIFY_CENTER,
-        "space-between": yoga.JUSTIFY_SPACE_BETWEEN,
-        "space-around": yoga.JUSTIFY_SPACE_AROUND,
-        "space-evenly": yoga.JUSTIFY_SPACE_EVENLY,
-      };
-      curNode[setterName("justifyContent")](
-        flexJustifyContent[flex.justify_content]
-      );
-    }
-
-    if (flex?.align_self) {
-      const flexAlignSelf = {
-        auto: yoga.ALIGN_AUTO,
-        "flex-start": yoga.ALIGN_FLEX_START,
-        "flex-end": yoga.ALIGN_FLEX_END,
-        center: yoga.ALIGN_CENTER,
-        baseline: yoga.ALIGN_BASELINE,
-        stretch: yoga.ALIGN_STRETCH,
-      };
-
-      curNode[setterName("alignSelf")](flexAlignSelf[flex.align_self]);
-    }
-
-    // flex처리
-    curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
-    curNode.setFlexWrap(yoga.WRAP_WRAP); // 필요한건가? 일단 넣어봄
-  }
+    },
+    [layoutDefinition]
+  );
 
   function createYogaNodes(layoutDefinition) {
     const curNode = Node.create();
-
-    // node의 크기 계산.
-    // type별로 다르게 계산, text는 글자크기에 맞춰서 비례한다. barcode는 무조건 stretch로 하거나 그럴듯.
-    setNodeSize(curNode, layoutDefinition);
-
-    // setFlex
-    handleFlex(curNode, layoutDefinition);
-
-    // handleChildren
-    // 해당 Node의 children을 여기에 넣어서 계산을 한다.
+    handleFlex(curNode, layoutDefinition); // flex 값을 다 처리함
     (layoutDefinition.children || [])
       .map(createYogaNodes)
       .forEach((node, i) => {
@@ -190,21 +82,6 @@ const Box = ({
     height: 0,
   };
 
-  const barcodeRef = useCallback(
-    (node) => {
-      if (node && layoutDefinition && layoutDefinition.type === "Barcode") {
-        JsBarcode(node, layoutDefinition.barcode.text, {
-          format: "code128",
-          textMargin: 0,
-          margin: 0,
-          displayValue: false,
-        });
-        forceUpdate((prev) => !prev);
-      }
-    },
-    [layoutDefinition]
-  );
-
   return (
     <div
       className={`${styles.box} ${
@@ -220,7 +97,7 @@ const Box = ({
         e.stopPropagation();
         onUpdateSelectedPath(path);
       }}
-      draggable={true}
+      draggable={path.length === 0 ? false : true}
       onDragStart={(e) => {
         startRef.current = { x: e.clientX, y: e.clientY };
         requestAnimationFrame(() => {
@@ -258,7 +135,6 @@ const Box = ({
           {layoutDefinition.text.text}
         </div>
       )}
-
       {(children || []).map((child, index) => {
         if (layoutDefinition?.children[index]) {
           return (

@@ -1,5 +1,6 @@
 import * as R from "ramda";
 import { font } from "./constants";
+import yoga from "yoga-layout-prebuilt";
 
 function appendAtPath(state, { selectedPath, node }) {
   try {
@@ -103,6 +104,102 @@ function convertToText(state, { selectedPath }) {
   }
 }
 
+// size를 반환
+function handleSize(size: any, zoom: any = 1): any {
+  if (!size) {
+    return "auto";
+  }
+  if (size.charAt(size.length - 1) === "%") {
+    return size;
+  }
+  if (size.slice(-2) === "px") {
+    return `${parseInt(size.slice(0, -2)) * zoom}`;
+  }
+  return `${parseInt(size) * zoom}`;
+}
+
+function setterName(key) {
+  return `set${key[0].toUpperCase()}${key.substr(1)}`;
+}
+
+function handleFlex(curNode, layoutDefinition) {
+  const { flex } = layoutDefinition;
+
+  // node의 크기 계산.
+  curNode[setterName("width")](handleSize(flex?.size?.width));
+  curNode[setterName("height")](handleSize(flex?.size?.height));
+
+  // padding, margin, postion, border같은것 처리
+  ["margin", "padding"].forEach((key) => {
+    ["top", "right", "bottom", "left"].forEach((dir) => {
+      try {
+        curNode[setterName(key)](
+          yoga[`EDGE_${dir.toUpperCase()}`],
+          handleSize(flex[key][dir]) // 값이 있다면 일단 px인걸로 나중에 처리하게
+        );
+      } catch (e) {}
+    });
+  });
+
+  // size와 관련되지 않은 다른 속성들.
+  if (flex?.flex_direction) {
+    const flexDir = {
+      row: yoga.FLEX_DIRECTION_ROW,
+      "row-reverse": yoga.FLEX_DIRECTION_ROW_REVERSE,
+      column: yoga.FLEX_DIRECTION_COLUMN,
+      "column-reverse": yoga.FLEX_DIRECTION_COLUMN_REVERSE,
+    };
+    curNode[setterName("flexDirection")](flexDir[flex.flex_direction]);
+  }
+
+  if (flex?.flex_grow) {
+    // number
+    curNode[setterName("flexGrow")](flex.flex_grow);
+  }
+
+  if (flex?.align_items) {
+    const flexAlignItems = {
+      "flex-start": yoga.ALIGN_FLEX_START,
+      "flex-end": yoga.ALIGN_FLEX_END,
+      center: yoga.ALIGN_CENTER,
+      baseline: yoga.ALIGN_BASELINE,
+      stretch: yoga.ALIGN_STRETCH,
+    };
+    curNode[setterName("alignItems")](flexAlignItems[flex.align_items]);
+  }
+
+  if (flex?.justify_content) {
+    const flexJustifyContent = {
+      "flex-start": yoga.JUSTIFY_FLEX_START,
+      "flex-end": yoga.JUSTIFY_FLEX_END,
+      center: yoga.JUSTIFY_CENTER,
+      "space-between": yoga.JUSTIFY_SPACE_BETWEEN,
+      "space-around": yoga.JUSTIFY_SPACE_AROUND,
+      "space-evenly": yoga.JUSTIFY_SPACE_EVENLY,
+    };
+    curNode[setterName("justifyContent")](
+      flexJustifyContent[flex.justify_content]
+    );
+  }
+
+  if (flex?.align_self) {
+    const flexAlignSelf = {
+      auto: yoga.ALIGN_AUTO,
+      "flex-start": yoga.ALIGN_FLEX_START,
+      "flex-end": yoga.ALIGN_FLEX_END,
+      center: yoga.ALIGN_CENTER,
+      baseline: yoga.ALIGN_BASELINE,
+      stretch: yoga.ALIGN_STRETCH,
+    };
+
+    curNode[setterName("alignSelf")](flexAlignSelf[flex.align_self]);
+  }
+
+  // flex처리
+  curNode.setDisplay(yoga.DISPLAY_FLEX); // 이거 당연한거아닌가?
+  curNode.setFlexWrap(yoga.WRAP_WRAP); // 필요한건가? 일단 넣어봄
+}
+
 export {
   appendAtPath,
   removeAtPath,
@@ -110,4 +207,5 @@ export {
   convertToBarcode,
   convertToContainer,
   convertToText,
+  handleFlex,
 };

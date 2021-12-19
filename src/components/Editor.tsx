@@ -15,6 +15,7 @@ const Editor = ({
           width: `${layoutDefinition.flex.size.width}px`,
           height: `${layoutDefinition.flex.size.height}px`,
           position: "relative",
+          backgroundColor: "white",
         }}
       >
         <Box
