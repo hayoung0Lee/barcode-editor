@@ -1,0 +1,17 @@
+.buttonGroup {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 600px;
+  height: 80px;
+}
+
+.button {
+  width: 180px;
+  height: 30px;
+  background-color: rgba(51, 51, 51, 0.05);
+  border-radius: 8px;
+  border-width: 0;
+  cursor: pointer;
+}

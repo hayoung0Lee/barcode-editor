@@ -4,6 +4,7 @@ import SideBar from "./components/SideBar";
 import { useState, useReducer } from "react";
 import { StartSize } from "./utils/constants";
 import * as R from "ramda";
+import Menu from "./components/Menu";
 import {
   appendAtPath,
   removeAtPath,
@@ -110,13 +111,22 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <Editor
-        layoutDefinition={labelState}
-        path={[]}
-        selectedPath={selectedPath}
-        onUpdateSelectedPath={onUpdateSelectedPath}
-        onDragBox={onDragBox}
-      />
+      <div>
+        <Menu
+          selectedValue={R.path(selectedPath, labelState)}
+          onAdd={(type) => onAdd({ type, selectedPath })}
+          onRemove={() => onRemove({ selectedPath })}
+          exportLabel={exportLabel}
+          onUpdate={onUpdate}
+        />
+        <Editor
+          layoutDefinition={labelState}
+          path={[]}
+          selectedPath={selectedPath}
+          onUpdateSelectedPath={onUpdateSelectedPath}
+          onDragBox={onDragBox}
+        />
+      </div>
       <SideBar
         selectedValue={R.path(selectedPath, labelState)}
         onAdd={(type) => onAdd({ type, selectedPath })}

@@ -306,19 +306,6 @@ const BarcodeSetter = ({ selectedFlex, onUpdateContainer }) => {
 const SideBar = ({ selectedValue, onAdd, onRemove, exportLabel, onUpdate }) => {
   return (
     <div className={styles.sideBar}>
-      SideBar
-      <button onClick={R.partial(onAdd, ["Container"])}>onAddContainer</button>
-      <button onClick={R.partial(onUpdate, ["CONVERT_TO_TEXT"])}>
-        FillWithText
-      </button>
-      <button onClick={R.partial(onUpdate, ["CONVERT_TO_BARCODE"])}>
-        FillWithBarcode
-      </button>
-      <button onClick={R.partial(onUpdate, ["CONVERT_TO_CONTAINER"])}>
-        ConvertToContainer
-      </button>
-      <button onClick={onRemove}>onRemove</button>
-      <button onClick={exportLabel}>exportLabel</button>
       {selectedValue &&
         selectedValue["flex"] && ( // container일때만 뭐 설정하게 하기. 나머지는 걍 다 고정시킬거.
           <ContainerSetter
