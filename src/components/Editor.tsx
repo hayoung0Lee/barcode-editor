@@ -1,4 +1,4 @@
-import styles from "./Editor.module.css";
+import styles from "../css/Editor.module.css";
 import Box from "./Box";
 
 const Editor = ({

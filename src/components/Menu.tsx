@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import styles from "./Menu.module.css";
+import styles from "../css/Menu.module.css";
 
 const Button = ({ onClick, children }) => {
   return (

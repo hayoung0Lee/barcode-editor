@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 import * as R from "ramda";
-import styles from "./Box.module.css";
+import styles from "../css/Box.module.css";
 import { handleFlex } from "../utils/handler";
 interface PropType {
   layoutDefinition: any;

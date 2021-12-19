@@ -1,0 +1,7 @@
+.selectedOption {
+  background-color: gray;
+}
+
+.unSelectedOption {
+  background-color: white;
+}
