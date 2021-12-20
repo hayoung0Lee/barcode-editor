@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import { Node } from "yoga-layout-prebuilt";
 import JsBarcode from "jsbarcode";
 import * as R from "ramda";
@@ -13,6 +19,37 @@ interface PropType {
   onDragBox: any;
 }
 
+const useExpensiveFunc = (
+  nextLayoutDefinition,
+  compare,
+  expensiveFunc
+): any => {
+  // 최적화를 더 해보자
+  // const currentLayout = useMemo(
+  //   () => calculateLayout(layoutDefinition),
+  //   [layoutDefinition]
+  // );
+
+  const previousRef = useRef<any>();
+  if (!previousRef?.current) {
+    previousRef.current = [
+      nextLayoutDefinition,
+      expensiveFunc(nextLayoutDefinition),
+    ];
+    return previousRef.current[1];
+  }
+  if (compare(previousRef.current[0], nextLayoutDefinition)) {
+    // console.log("헌거 calc", nextLayoutDefinition);
+    return previousRef.current[1];
+  } else {
+    previousRef.current = [
+      nextLayoutDefinition,
+      expensiveFunc(nextLayoutDefinition),
+    ];
+    return previousRef.current[1];
+  }
+};
+
 const Box = ({
   layoutDefinition,
   path,
@@ -21,7 +58,6 @@ const Box = ({
   selectedPath,
   onDragBox,
 }: PropType) => {
-  const [currentLayout, setCurrentLayout] = useState<any>();
   const [_, forceUpdate] = useState<any>(false);
   const startRef = useRef<any>({ x: undefined, y: undefined });
 
@@ -63,24 +99,35 @@ const Box = ({
   }
 
   function calculateLayout(layoutDefinition) {
-    const curYogaNode = createYogaNodes(layoutDefinition);
-    curYogaNode.calculateLayout();
-    setCurrentLayout(getComputedLayout(curYogaNode));
+    if (layoutDefinition) {
+      const curYogaNode = createYogaNodes(layoutDefinition);
+      curYogaNode.calculateLayout();
+      return getComputedLayout(curYogaNode);
+    } else {
+      return {
+        left: 0,
+        top: 0,
+        width: 0,
+        height: 0,
+      };
+    }
   }
 
-  useEffect(() => {
-    calculateLayout(layoutDefinition);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layoutDefinition]);
+  // 그래도 얘가 더 빠름. react children들은 왜 re-render 하는건지 모르겠음
+  const currentLayout = useExpensiveFunc(
+    layoutDefinition,
+    R.equals,
+    calculateLayout
+  );
+
+  // const currentLayout = useMemo(
+  //   () => calculateLayout(layoutDefinition),
+  //   [layoutDefinition]
+  // );
 
   // 현재의 computedLayout
   const curComputedLayout = computedLayout || currentLayout; // props로 받은것(부모가 계산한 layout) | 없으면(root 같은 경우) 현재 자기 값.
-  const { left, top, width, height, children } = curComputedLayout || {
-    left: 0,
-    top: 0,
-    width: 0,
-    height: 0,
-  };
+  const { left, top, width, height, children } = curComputedLayout;
 
   return (
     <div
@@ -97,21 +144,25 @@ const Box = ({
         e.stopPropagation();
         onUpdateSelectedPath(path);
       }}
-      draggable={path.length === 0 ? false : true}
+      draggable={R.equals(path, selectedPath) && path.length > 0 ? true : false}
       onDragStart={(e) => {
+        e.stopPropagation();
         startRef.current = { x: e.clientX, y: e.clientY };
-        requestAnimationFrame(() => {
-          const element: any = e.target;
-          element.classList.add(styles.hide);
-        });
       }}
-      onDragEnd={(e) => {
+      onDrag={(e) => {
+        e.stopPropagation();
         onDragBox({
           x: e.clientX - startRef.current.x,
           y: e.clientY - startRef.current.y,
         });
-        const element: any = e.target;
-        element.classList.remove(styles.hide);
+        startRef.current = { x: e.clientX, y: e.clientY };
+      }}
+      onDragEnd={(e) => {
+        e.stopPropagation();
+        onDragBox({
+          x: e.clientX - startRef.current.x,
+          y: e.clientY - startRef.current.y,
+        });
       }}
     >
       {layoutDefinition?.type === "Barcode" && (
