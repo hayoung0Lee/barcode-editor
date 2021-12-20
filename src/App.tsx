@@ -1,7 +1,7 @@
 import styles from "./App.module.css";
 import Editor from "./components/Editor";
 import SideBar from "./components/SideBar";
-import { useState, useReducer } from "react";
+import { useState, useReducer, useCallback } from "react";
 import { StartSize } from "./utils/constants";
 import * as R from "ramda";
 import Menu from "./components/Menu";
@@ -44,22 +44,21 @@ function App() {
     children: [],
   });
 
-  function onAdd({ type, selectedPath }) {
-    if (type === "Container") {
-      dispatch({
-        type: "ADD",
-        payload: {
-          selectedPath,
-          node: {
-            type: "Container",
-            flex: {
-              size: { width: "50%", height: "50%" },
-            },
-            children: [],
+  function onAdd({ selectedPath }) {
+    dispatch({
+      type: "ADD",
+      payload: {
+        selectedPath,
+        node: {
+          type: "Container",
+          flex: {
+            size: { width: "50%", height: "50%" },
+            flex_direction: "row",
           },
+          children: [],
         },
-      });
-    }
+      },
+    });
   }
 
   function onRemove({ selectedPath }) {
@@ -89,6 +88,7 @@ function App() {
 
   function onDragBox({ x, y }) {
     // margin값만 조정하도록 한다.
+    // x, y 증가 방향으로만 이동가능,
     const currentMargin: any = R.path(
       [...selectedPath, "flex", "margin"],
       labelState
@@ -106,33 +106,49 @@ function App() {
   }
 
   function exportLabel() {
-    console.log("createdLabel", JSON.stringify(labelState));
+    // console.log("createdLabel", JSON.stringify(labelState));
   }
+
+  const memoizedOnAdd = useCallback(() => {
+    onAdd({ selectedPath });
+  }, [selectedPath]);
+  const memoizedOnRemove = useCallback(() => {
+    onRemove({ selectedPath });
+  }, [selectedPath]);
+
+  const memoizedOnUpdate = useCallback(onUpdate, [selectedPath]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedOnDragBox = useCallback(onDragBox, [selectedPath, labelState]);
+
+  const memoizedOnExportLabel = useCallback(exportLabel, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizeOnFlexUpdate = useCallback(
+    R.partial(onUpdate, ["UPDATE_FLEX"]),
+    [selectedPath]
+  );
 
   return (
     <div className={styles.app}>
       <div className={styles.leftMenu}>
         <Menu
-          selectedValue={R.path(selectedPath, labelState)}
-          onAdd={(type) => onAdd({ type, selectedPath })}
-          onRemove={() => onRemove({ selectedPath })}
-          exportLabel={exportLabel}
-          onUpdate={onUpdate}
+          onAdd={memoizedOnAdd}
+          onRemove={memoizedOnRemove}
+          exportLabel={memoizedOnExportLabel}
+          onUpdate={memoizedOnUpdate}
         />
         <Editor
           layoutDefinition={labelState}
           path={[]}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}
-          onDragBox={onDragBox}
+          onDragBox={memoizedOnDragBox}
         />
       </div>
       <SideBar
-        selectedValue={R.path(selectedPath, labelState)}
-        onAdd={(type) => onAdd({ type, selectedPath })}
-        onRemove={() => onRemove({ selectedPath })}
-        exportLabel={exportLabel}
-        onUpdate={onUpdate}
+        selectedFlex={R.path([...selectedPath, "flex"], labelState)}
+        onFlexUpdate={memoizeOnFlexUpdate}
       />
     </div>
   );
