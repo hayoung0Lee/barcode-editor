@@ -7,17 +7,18 @@ import useCalculateLayout from "../hooks/useCalculateLayout";
 
 const NodeWrapper = forwardRef((props: any, ref: any) => {
   const {
-    layoutDefinition,
+    labelState,
     path,
     computedLayout,
     onUpdateSelectedPath,
     selectedPath,
     onDragBox,
   }: any = props;
+  const layoutDefinition = labelState[path];
   const currentLayout = useCalculateLayout(layoutDefinition);
   const curComputedLayout = computedLayout || currentLayout; // props로 받은것(부모가 계산한 layout) | 없으면(root 같은 경우) 현재 자기 값.
   const { left, top, width, height, children } = curComputedLayout;
-  const isRoot = path.length === 0;
+  const isRoot = path === 0;
 
   return (
     <Draggable

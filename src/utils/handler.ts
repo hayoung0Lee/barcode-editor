@@ -3,10 +3,18 @@ import { font } from "./constants";
 import yoga from "yoga-layout-prebuilt";
 
 function appendAtPath(state, { selectedPath, node }) {
+  console.log("appendAtPath", selectedPath);
   try {
-    const pathToChildren = [...selectedPath, "children"];
-    const currentChildren: any = R.path(pathToChildren, state);
-    return R.assocPath(pathToChildren, R.append(node, currentChildren), state);
+    const newNodeId = state.nodeCounter;
+    return {
+      ...state,
+      nodeCounter: newNodeId + 1,
+      [selectedPath]: {
+        ...state[selectedPath],
+        children: [...state[selectedPath].children, newNodeId],
+      },
+      [newNodeId]: node,
+    };
   } catch (err) {
     console.error("appendAtPath에서 에러남", err);
     return state;

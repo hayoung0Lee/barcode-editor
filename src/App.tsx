@@ -1,7 +1,7 @@
 import styles from "./App.module.css";
 import Editor from "./components/Editor";
 import SideBar from "./components/SideBar";
-import { useState, useReducer, useCallback } from "react";
+import { useState, useReducer, useCallback, useContext } from "react";
 import { StartSize } from "./utils/constants";
 import * as R from "ramda";
 import Menu from "./components/Menu";
@@ -33,17 +33,27 @@ function reducer(state, action) {
   }
 }
 
+//
+// {root: {type, flex, [node1, node2]},
+// node1: {type, flex, children},
+// node2: {type, flex, children},
+// }
+
 function App() {
-  const [selectedPath, onUpdateSelectedPath] = useState<any>([]);
+  const [selectedPath, onUpdateSelectedPath] = useState<any>(0);
   const [labelState, dispatch] = useReducer(reducer, {
-    type: "Container",
-    flex: {
-      size: StartSize,
-      flex_direction: "row",
+    nodeCounter: 1,
+    0: {
+      type: "Container",
+      flex: {
+        size: StartSize,
+        flex_direction: "row",
+      },
+      children: [],
     },
-    children: [],
   });
 
+  console.log("labelState", labelState);
   function onAdd({ selectedPath }) {
     dispatch({
       type: "ADD",
@@ -139,15 +149,14 @@ function App() {
           onUpdate={memoizedOnUpdate}
         />
         <Editor
-          layoutDefinition={labelState}
-          path={[]}
+          labelState={labelState}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}
           onDragBox={memoizedOnDragBox}
         />
       </div>
       <SideBar
-        selectedFlex={R.path([...selectedPath, "flex"], labelState)}
+        selectedFlex={R.path([selectedPath, "flex"], labelState)}
         onFlexUpdate={memoizeOnFlexUpdate}
       />
     </div>

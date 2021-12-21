@@ -3,8 +3,7 @@ import NodeWrapper from "./NodeWrapper";
 import { useRef, useLayoutEffect } from "react";
 
 const Editor = ({
-  layoutDefinition,
-  path,
+  labelState,
   onUpdateSelectedPath,
   selectedPath,
   onDragBox,
@@ -16,7 +15,7 @@ const Editor = ({
     const nodeSize = rootNode.current.getBoundingClientRect();
     wrapperNode.current.style.width = `${nodeSize.width}px`;
     wrapperNode.current.style.height = `${nodeSize.height}px`;
-  }, [layoutDefinition]);
+  }, [labelState[0]]);
 
   return (
     <div className={styles.editor}>
@@ -29,8 +28,8 @@ const Editor = ({
       >
         <NodeWrapper
           ref={rootNode}
-          layoutDefinition={layoutDefinition}
-          path={path}
+          labelState={labelState}
+          path={0}
           computedLayout={null}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}

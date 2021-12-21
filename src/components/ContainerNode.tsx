@@ -9,13 +9,14 @@ const ContainerNode = ({
   containerChildren,
 }) => {
   return (containerChildren || []).map((child, index) => {
-    if (layoutDefinition?.children[index]) {
+    const nodeId = layoutDefinition?.children[index];
+    if (nodeId) {
       return (
         <NodeWrapper
-          key={index}
-          layoutDefinition={layoutDefinition.children[index]} // definition 상의 children
+          key={nodeId}
+          layoutDefinition={layoutDefinition[nodeId]} // definition 상의 children
           computedLayout={child} // 여기서 layout 구한거
-          path={[...path, "children", index]} // 여기까지 오는 path임
+          path={nodeId} // 여기까지 오는 path임
           onUpdateSelectedPath={onUpdateSelectedPath}
           selectedPath={selectedPath}
           onDragBox={onDragBox}
