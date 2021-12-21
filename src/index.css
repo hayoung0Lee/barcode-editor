@@ -18,3 +18,10 @@ body {
   --box-border-size-hover: 2px;
   --box-border-color-hover: #68cfbb;
 }
+
+#modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

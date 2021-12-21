@@ -106,10 +106,6 @@ function App() {
     });
   }
 
-  function exportLabel() {
-    console.log("createdLabel", JSON.stringify(labelState));
-  }
-
   const memoizedOnAdd = useCallback(() => {
     onAdd({ selectedPath });
   }, [selectedPath]);
@@ -121,8 +117,6 @@ function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedOnDragBox = useCallback(onDragBox, [selectedPath, labelState]);
-
-  const memoizedOnExportLabel = useCallback(exportLabel, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizeOnFlexUpdate = useCallback(
@@ -137,7 +131,6 @@ function App() {
           <Menu
             onAdd={memoizedOnAdd}
             onRemove={memoizedOnRemove}
-            exportLabel={memoizedOnExportLabel}
             onUpdate={memoizedOnUpdate}
           />
           <Editor
@@ -153,7 +146,7 @@ function App() {
           onFlexUpdate={memoizeOnFlexUpdate}
         />
       </div>
-      <Footer exportLabel={exportLabel} />
+      <Footer labelState={labelState} />
     </div>
   );
 }

@@ -11,7 +11,7 @@ const MenuButton = ({ children, ...props }: any) => {
   );
 };
 
-const Menu = ({ onAdd, onRemove, exportLabel, onUpdate }) => {
+const Menu = ({ onAdd, onRemove, onUpdate }) => {
   return (
     <div className={styles.buttonGroup}>
       <MenuButton onClick={onAdd}>Add Container</MenuButton>
