@@ -1,5 +1,6 @@
 import styles from "../css/Editor.module.css";
-import Box from "./Box";
+import NodeWrapper from "./NodeWrapper";
+import { useRef, useLayoutEffect } from "react";
 
 const Editor = ({
   layoutDefinition,
@@ -8,24 +9,33 @@ const Editor = ({
   selectedPath,
   onDragBox,
 }) => {
+  const wrapperNode = useRef<any>();
+  const rootNode = useRef<any>();
+
+  useLayoutEffect(() => {
+    const nodeSize = rootNode.current.getBoundingClientRect();
+    wrapperNode.current.style.width = `${nodeSize.width}px`;
+    wrapperNode.current.style.height = `${nodeSize.height}px`;
+  }, [layoutDefinition]);
+
   return (
     <div className={styles.editor}>
       <div
+        ref={wrapperNode}
         style={{
-          width: `${layoutDefinition.flex.size.width}px`,
-          height: `${layoutDefinition.flex.size.height}px`,
           position: "relative",
           backgroundColor: "white",
         }}
       >
-        <Box
+        <NodeWrapper
+          ref={rootNode}
           layoutDefinition={layoutDefinition}
           path={path}
           computedLayout={null}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}
           onDragBox={onDragBox}
-        ></Box>
+        ></NodeWrapper>
       </div>
     </div>
   );
