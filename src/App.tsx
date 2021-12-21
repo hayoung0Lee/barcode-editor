@@ -5,6 +5,7 @@ import { useState, useReducer, useCallback } from "react";
 import { StartSize } from "./utils/constants";
 import * as R from "ramda";
 import Menu from "./components/Menu";
+import Footer from "./components/Footer";
 import {
   appendAtPath,
   removeAtPath,
@@ -106,7 +107,7 @@ function App() {
   }
 
   function exportLabel() {
-    // console.log("createdLabel", JSON.stringify(labelState));
+    console.log("createdLabel", JSON.stringify(labelState));
   }
 
   const memoizedOnAdd = useCallback(() => {
@@ -131,25 +132,28 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <div className={styles.leftMenu}>
-        <Menu
-          onAdd={memoizedOnAdd}
-          onRemove={memoizedOnRemove}
-          exportLabel={memoizedOnExportLabel}
-          onUpdate={memoizedOnUpdate}
-        />
-        <Editor
-          layoutDefinition={labelState}
-          path={[]}
-          selectedPath={selectedPath}
-          onUpdateSelectedPath={onUpdateSelectedPath}
-          onDragBox={memoizedOnDragBox}
+      <div className={styles.main}>
+        <div className={styles.leftMenu}>
+          <Menu
+            onAdd={memoizedOnAdd}
+            onRemove={memoizedOnRemove}
+            exportLabel={memoizedOnExportLabel}
+            onUpdate={memoizedOnUpdate}
+          />
+          <Editor
+            layoutDefinition={labelState}
+            path={[]}
+            selectedPath={selectedPath}
+            onUpdateSelectedPath={onUpdateSelectedPath}
+            onDragBox={memoizedOnDragBox}
+          />
+        </div>
+        <SideBar
+          selectedFlex={R.path([...selectedPath, "flex"], labelState)}
+          onFlexUpdate={memoizeOnFlexUpdate}
         />
       </div>
-      <SideBar
-        selectedFlex={R.path([...selectedPath, "flex"], labelState)}
-        onFlexUpdate={memoizeOnFlexUpdate}
-      />
+      <Footer exportLabel={exportLabel} />
     </div>
   );
 }

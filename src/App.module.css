@@ -1,14 +1,17 @@
 .app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  max-width: fit-content;
+  margin: auto;
 }
 
-.app > div {
+.main {
+  display: flex;
+  justify-content: center;
+}
+
+.main > div {
   flex-shrink: 0;
 }
 
 .leftMenu {
-  height: 750px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
