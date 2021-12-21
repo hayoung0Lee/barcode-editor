@@ -12,8 +12,16 @@ const Editor = ({
     <div className={styles.editor}>
       <div
         style={{
-          width: `${layoutDefinition.flex.size.width}px`,
-          height: `${layoutDefinition.flex.size.height}px`,
+          width: `${
+            isNaN(layoutDefinition.flex.size.width)
+              ? 300
+              : layoutDefinition.flex.size.width
+          }px`,
+          height: `${
+            isNaN(layoutDefinition.flex.size.height)
+              ? 300
+              : layoutDefinition.flex.size.height
+          }px`,
           position: "relative",
           backgroundColor: "white",
         }}
