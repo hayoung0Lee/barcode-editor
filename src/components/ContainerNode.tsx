@@ -1,4 +1,5 @@
 import NodeWrapper from "./NodeWrapper";
+import { memo } from "react";
 
 const ContainerNode = ({
   layoutDefinition,
@@ -27,4 +28,4 @@ const ContainerNode = ({
   });
 };
 
-export default ContainerNode;
+export default memo(ContainerNode);

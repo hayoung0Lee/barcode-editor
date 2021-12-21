@@ -1,6 +1,6 @@
 import * as R from "ramda";
 import styles from "../css/Draggable.module.css";
-import { useRef, forwardRef } from "react";
+import { useRef, forwardRef, memo } from "react";
 
 const Draggable = forwardRef((props: any, ref: any) => {
   const {
@@ -58,4 +58,4 @@ const Draggable = forwardRef((props: any, ref: any) => {
   );
 });
 
-export default Draggable;
+export default memo(Draggable);
