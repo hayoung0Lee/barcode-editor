@@ -1,25 +1,27 @@
 import * as R from "ramda";
 import styles from "../css/Draggable.module.css";
-import { useRef } from "react";
+import { useRef, forwardRef } from "react";
 
-const Draggable = ({
-  left,
-  top,
-  width,
-  height,
-  path,
-  onUpdateSelectedPath,
-  selectedPath,
-  onDragBox,
-  children,
-}: any) => {
+const Draggable = forwardRef((props: any, ref: any) => {
+  const {
+    left,
+    top,
+    width,
+    height,
+    path,
+    onUpdateSelectedPath,
+    selectedPath,
+    onDragBox,
+    children,
+  }: any = props;
   const startRef = useRef<any>({ x: undefined, y: undefined });
+  const isRoot = path.length === 0;
+  const isSelected = R.equals(path, selectedPath);
 
   return (
     <div
-      className={`${styles.box} ${
-        R.equals(path, selectedPath) ? styles.selected : ""
-      }`}
+      ref={ref ? ref : null}
+      className={`${styles.box} ${isSelected ? styles.selected : ""}`}
       style={{
         left,
         top,
@@ -30,7 +32,7 @@ const Draggable = ({
         e.stopPropagation();
         onUpdateSelectedPath(path);
       }}
-      draggable={R.equals(path, selectedPath) && path.length > 0 ? true : false}
+      draggable={isSelected && !isRoot ? true : false}
       onDragStart={(e) => {
         e.stopPropagation();
         startRef.current = { x: e.clientX, y: e.clientY };
@@ -54,6 +56,6 @@ const Draggable = ({
       {children}
     </div>
   );
-};
+});
 
 export default Draggable;
