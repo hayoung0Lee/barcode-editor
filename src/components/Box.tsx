@@ -1,15 +1,11 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useRef } from "react";
 import { Node } from "yoga-layout-prebuilt";
-import JsBarcode from "jsbarcode";
+import BarcodeNode from "./BarcodeNode";
+import TextNode from "./TextNode";
+import ContainerNode from "./ContainerNode";
 import * as R from "ramda";
-import styles from "../css/Box.module.css";
 import { handleFlex } from "../utils/handler";
+import Draggable from "./Draggable";
 interface PropType {
   layoutDefinition: any;
   computedLayout: any;
@@ -58,24 +54,6 @@ const Box = ({
   selectedPath,
   onDragBox,
 }: PropType) => {
-  const [_, forceUpdate] = useState<any>(false);
-  const startRef = useRef<any>({ x: undefined, y: undefined });
-
-  const barcodeRef = useCallback(
-    (node) => {
-      if (node && layoutDefinition && layoutDefinition.type === "Barcode") {
-        JsBarcode(node, layoutDefinition.barcode.text, {
-          format: "code128",
-          textMargin: 0,
-          margin: 0,
-          displayValue: false,
-        });
-        forceUpdate((prev) => !prev);
-      }
-    },
-    [layoutDefinition]
-  );
-
   function createYogaNodes(layoutDefinition) {
     const curNode = Node.create();
     handleFlex(curNode, layoutDefinition); // flex 값을 다 처리함
@@ -120,90 +98,38 @@ const Box = ({
     calculateLayout
   );
 
-  // const currentLayout = useMemo(
-  //   () => calculateLayout(layoutDefinition),
-  //   [layoutDefinition]
-  // );
-
   // 현재의 computedLayout
   const curComputedLayout = computedLayout || currentLayout; // props로 받은것(부모가 계산한 layout) | 없으면(root 같은 경우) 현재 자기 값.
   const { left, top, width, height, children } = curComputedLayout;
 
   return (
-    <div
-      className={`${styles.box} ${
-        R.equals(path, selectedPath) ? styles.selected : ""
-      }`}
-      style={{
-        left,
-        top,
-        width,
-        height,
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        onUpdateSelectedPath(path);
-      }}
-      draggable={R.equals(path, selectedPath) && path.length > 0 ? true : false}
-      onDragStart={(e) => {
-        e.stopPropagation();
-        startRef.current = { x: e.clientX, y: e.clientY };
-      }}
-      onDrag={(e) => {
-        e.stopPropagation();
-        onDragBox({
-          x: e.clientX - startRef.current.x,
-          y: e.clientY - startRef.current.y,
-        });
-        startRef.current = { x: e.clientX, y: e.clientY };
-      }}
-      onDragEnd={(e) => {
-        e.stopPropagation();
-        onDragBox({
-          x: e.clientX - startRef.current.x,
-          y: e.clientY - startRef.current.y,
-        });
-      }}
+    <Draggable
+      left={left}
+      top={top}
+      width={width}
+      height={height}
+      path={path}
+      onUpdateSelectedPath={onUpdateSelectedPath}
+      selectedPath={selectedPath}
+      onDragBox={onDragBox}
     >
       {layoutDefinition?.type === "Barcode" && (
-        <svg ref={barcodeRef} className={styles.barcode}></svg>
+        <BarcodeNode layoutDefinition={layoutDefinition} />
       )}
-      {layoutDefinition?.text?.text && (
-        <div
-          style={{
-            fontSize: layoutDefinition.text.text_size,
-            lineHeight: 1.2,
-            textAlign: layoutDefinition.text.text_align,
-            fontFamily: layoutDefinition.text.font_family,
-            fontWeight: layoutDefinition.text.font_weight,
-            WebkitLineClamp: layoutDefinition.text.text_max_line,
-            display: "-webkit-box",
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {layoutDefinition.text.text}
-        </div>
+      {layoutDefinition?.type === "Text" && (
+        <TextNode layoutDefinition={layoutDefinition} />
       )}
-      {(children || []).map((child, index) => {
-        if (layoutDefinition?.children[index]) {
-          return (
-            <Box
-              key={index}
-              layoutDefinition={layoutDefinition.children[index]} // definition 상의 children
-              computedLayout={child} // 여기서 layout 구한거
-              path={[...path, "children", index]} // 여기까지 오는 path임
-              onUpdateSelectedPath={onUpdateSelectedPath}
-              selectedPath={selectedPath}
-              onDragBox={onDragBox}
-            />
-          );
-        } else {
-          return null;
-        }
-      })}
-    </div>
+      {layoutDefinition?.type === "Container" && (
+        <ContainerNode
+          layoutDefinition={layoutDefinition}
+          path={path}
+          selectedPath={selectedPath}
+          onDragBox={onDragBox}
+          onUpdateSelectedPath={onUpdateSelectedPath}
+          containerChildren={children}
+        />
+      )}
+    </Draggable>
   );
 };
 

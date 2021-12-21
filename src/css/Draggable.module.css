@@ -1,0 +1,9 @@
+.box {
+    box-shadow: 0 0 0 var(--box-border-size) var(--box-border-color);
+    position: absolute;
+    transition: box-shadow 0.2s;
+}
+
+.selected {
+    box-shadow: 0 0 0 var(--box-border-size-hover) var(--box-border-color-hover);
+}
