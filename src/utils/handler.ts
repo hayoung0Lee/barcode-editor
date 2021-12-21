@@ -115,6 +115,9 @@ function handleSize(size: any, zoom: any = 1): any {
   if (size.slice(-2) === "px") {
     return `${parseInt(size.slice(0, -2)) * zoom}`;
   }
+  if (isNaN(size)) {
+    return "auto";
+  }
   return `${parseInt(size) * zoom}`;
 }
 
