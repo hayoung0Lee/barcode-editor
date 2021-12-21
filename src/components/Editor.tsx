@@ -1,5 +1,5 @@
 import styles from "../css/Editor.module.css";
-import Box from "./Box";
+import NodeWrapper from "./NodeWrapper";
 
 const Editor = ({
   layoutDefinition,
@@ -26,14 +26,14 @@ const Editor = ({
           backgroundColor: "white",
         }}
       >
-        <Box
+        <NodeWrapper
           layoutDefinition={layoutDefinition}
           path={path}
           computedLayout={null}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}
           onDragBox={onDragBox}
-        ></Box>
+        ></NodeWrapper>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import Box from "./Box";
+import NodeWrapper from "./NodeWrapper";
 
 const ContainerNode = ({
   layoutDefinition,
@@ -11,7 +11,7 @@ const ContainerNode = ({
   return (containerChildren || []).map((child, index) => {
     if (layoutDefinition?.children[index]) {
       return (
-        <Box
+        <NodeWrapper
           key={index}
           layoutDefinition={layoutDefinition.children[index]} // definition 상의 children
           computedLayout={child} // 여기서 layout 구한거
