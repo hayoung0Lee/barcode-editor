@@ -1,19 +1,17 @@
-import { forwardRef, memo } from "react";
+import { forwardRef, memo, useContext } from "react";
 import BarcodeNode from "./BarcodeNode";
 import TextNode from "./TextNode";
 import ContainerNode from "./ContainerNode";
 import Draggable from "./Draggable";
 import useCalculateLayout from "../hooks/useCalculateLayout";
+import { LabelContext } from "../utils/LabelContext";
+import * as R from "ramda";
 
 const NodeWrapper = forwardRef((props: any, ref: any) => {
-  const {
-    layoutDefinition,
-    path,
-    computedLayout,
-    onUpdateSelectedPath,
-    selectedPath,
-    onDragBox,
-  }: any = props;
+  const { path, computedLayout, onUpdateSelectedPath, selectedPath }: any =
+    props;
+  const labelState = useContext<any>(LabelContext)[0];
+  const layoutDefinition: any = R.path([...path], labelState);
   const currentLayout = useCalculateLayout(layoutDefinition);
   const curComputedLayout = computedLayout || currentLayout; // props로 받은것(부모가 계산한 layout) | 없으면(root 같은 경우) 현재 자기 값.
   const { left, top, width, height, children } = curComputedLayout;
@@ -29,7 +27,6 @@ const NodeWrapper = forwardRef((props: any, ref: any) => {
       path={path}
       onUpdateSelectedPath={onUpdateSelectedPath}
       selectedPath={selectedPath}
-      onDragBox={onDragBox}
     >
       {layoutDefinition?.type === "Barcode" && (
         <BarcodeNode layoutDefinition={layoutDefinition} />
@@ -42,7 +39,6 @@ const NodeWrapper = forwardRef((props: any, ref: any) => {
           layoutDefinition={layoutDefinition}
           path={path}
           selectedPath={selectedPath}
-          onDragBox={onDragBox}
           onUpdateSelectedPath={onUpdateSelectedPath}
           containerChildren={children}
         />

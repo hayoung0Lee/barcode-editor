@@ -1,14 +1,10 @@
 import styles from "../css/Editor.module.css";
 import NodeWrapper from "./NodeWrapper";
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useContext } from "react";
+import { LabelContext } from "../utils/LabelContext";
 
-const Editor = ({
-  layoutDefinition,
-  path,
-  onUpdateSelectedPath,
-  selectedPath,
-  onDragBox,
-}) => {
+const Editor = ({ path, onUpdateSelectedPath, selectedPath }) => {
+  const labelState = useContext<any>(LabelContext)[0];
   const wrapperNode = useRef<any>();
   const rootNode = useRef<any>();
 
@@ -16,7 +12,7 @@ const Editor = ({
     const nodeSize = rootNode.current.getBoundingClientRect();
     wrapperNode.current.style.width = `${nodeSize.width}px`;
     wrapperNode.current.style.height = `${nodeSize.height}px`;
-  }, [layoutDefinition]);
+  }, [labelState.flex.size]);
 
   return (
     <div className={styles.editor}>
@@ -29,12 +25,10 @@ const Editor = ({
       >
         <NodeWrapper
           ref={rootNode}
-          layoutDefinition={layoutDefinition}
           path={path}
           computedLayout={null}
           selectedPath={selectedPath}
           onUpdateSelectedPath={onUpdateSelectedPath}
-          onDragBox={onDragBox}
         ></NodeWrapper>
       </div>
     </div>

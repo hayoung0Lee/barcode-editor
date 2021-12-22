@@ -5,7 +5,6 @@ const ContainerNode = ({
   layoutDefinition,
   path,
   selectedPath,
-  onDragBox,
   onUpdateSelectedPath,
   containerChildren,
 }) => {
@@ -19,7 +18,6 @@ const ContainerNode = ({
           path={[...path, "children", index]} // 여기까지 오는 path임
           onUpdateSelectedPath={onUpdateSelectedPath}
           selectedPath={selectedPath}
-          onDragBox={onDragBox}
         />
       );
     } else {
