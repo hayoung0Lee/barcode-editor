@@ -1,3 +1,5 @@
 .sideBar {
   width: 500px;
+  min-height: 750px;
+  margin-top: 10px;
 }
