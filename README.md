@@ -14,3 +14,9 @@
 
 - drag and drop: http://tcpschool.com/html/html5_api_dragAndDrop
 - https://www.npmjs.com/package/react-draggable
+
+<!--
+1. useContext로 바꾸기. 상태 prop드릴링 그만.
+2. text, barcode 입력되도록 하기.
+3. 더블클릭으로 drag모드 키고, 드래그 모드시 guide를 띄우기(margin guide) + 방향화살표 같은것 가능한지
+ -->
