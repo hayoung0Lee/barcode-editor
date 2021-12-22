@@ -7,3 +7,9 @@
 .selected {
     box-shadow: 0 0 0 var(--box-border-size-hover) var(--box-border-color-hover);
 }
+
+.draggable{
+    box-shadow: 0 0 0 2px red;
+    cursor: grabbing;
+}
+
