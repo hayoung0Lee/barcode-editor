@@ -1,15 +1,16 @@
-import { forwardRef, memo, useContext } from "react";
+import { forwardRef, useContext } from "react";
 import BarcodeNode from "./BarcodeNode";
 import TextNode from "./TextNode";
 import ContainerNode from "./ContainerNode";
 import Draggable from "./Draggable";
 import useCalculateLayout from "../hooks/useCalculateLayout";
-import { LabelContext } from "../utils/LabelContext";
+import { LabelContext, SelectedContext } from "../utils/LabelContext";
 import * as R from "ramda";
+import customMemo from "../hooks/customMemo";
 
 const NodeWrapper = forwardRef((props: any, ref: any) => {
-  const { path, computedLayout, onUpdateSelectedPath, selectedPath }: any =
-    props;
+  const { path, computedLayout }: any = props;
+  const [selectedPath, onUpdateSelectedPath] = useContext(SelectedContext);
   const labelState = useContext<any>(LabelContext)[0];
   const layoutDefinition: any = R.path([...path], labelState);
   const currentLayout = useCalculateLayout(layoutDefinition);
@@ -38,8 +39,6 @@ const NodeWrapper = forwardRef((props: any, ref: any) => {
         <ContainerNode
           layoutDefinition={layoutDefinition}
           path={path}
-          selectedPath={selectedPath}
-          onUpdateSelectedPath={onUpdateSelectedPath}
           containerChildren={children}
         />
       )}
@@ -47,4 +46,4 @@ const NodeWrapper = forwardRef((props: any, ref: any) => {
   );
 });
 
-export default memo(NodeWrapper);
+export default customMemo(NodeWrapper);

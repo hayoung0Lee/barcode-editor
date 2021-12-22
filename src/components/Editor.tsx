@@ -3,7 +3,7 @@ import NodeWrapper from "./NodeWrapper";
 import { useRef, useLayoutEffect, useContext } from "react";
 import { LabelContext } from "../utils/LabelContext";
 
-const Editor = ({ path, onUpdateSelectedPath, selectedPath }) => {
+const Editor = () => {
   const labelState = useContext<any>(LabelContext)[0];
   const wrapperNode = useRef<any>();
   const rootNode = useRef<any>();
@@ -25,10 +25,8 @@ const Editor = ({ path, onUpdateSelectedPath, selectedPath }) => {
       >
         <NodeWrapper
           ref={rootNode}
-          path={path}
+          path={[]}
           computedLayout={null}
-          selectedPath={selectedPath}
-          onUpdateSelectedPath={onUpdateSelectedPath}
         ></NodeWrapper>
       </div>
     </div>

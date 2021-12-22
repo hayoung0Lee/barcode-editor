@@ -1,13 +1,14 @@
 import styles from "../css/SideBar.module.css";
 import FlexSetter from "./FlexSetter";
-import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import * as R from "ramda";
-import { LabelContext, onUpdate } from "../utils/LabelContext";
+import { LabelContext, onUpdate, SelectedContext } from "../utils/LabelContext";
 import { useContext, useCallback } from "react";
+import customMemo from "../hooks/customMemo";
 
-const SideBar = ({ selectedPath }) => {
+const SideBar = () => {
   const [labelState, dispatch] = useContext(LabelContext);
+  const [selectedPath] = useContext<any>(SelectedContext);
   const selectedFlex = R.path([...selectedPath, "flex"], labelState);
 
   const memoizedFlexUpdate = useCallback(
@@ -39,4 +40,4 @@ const SideBar = ({ selectedPath }) => {
   );
 };
 
-export default React.memo(SideBar);
+export default customMemo(SideBar);

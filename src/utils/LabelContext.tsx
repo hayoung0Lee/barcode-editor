@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useState, useCallback } from "react";
 import {
   appendAtPath,
   removeAtPath,
@@ -93,12 +93,26 @@ const defaultLabel = {
 };
 
 export const LabelContext = createContext([defaultLabel, () => {}]);
+export const SelectedContext = createContext([[], () => {}]);
 
 export const LabelProvider = ({ children }) => {
+  const [selected, setSelected] = useState<any>([]);
   const [labelState, dispatch] = useReducer(reducer, defaultLabel);
+
+  const updateSelectedPath = useCallback(
+    (path) => {
+      if (!R.equals(path, selected)) {
+        setSelected(path);
+      }
+    },
+    [selected]
+  );
+
   return (
-    <LabelContext.Provider value={[labelState, dispatch]}>
-      {children}
-    </LabelContext.Provider>
+    <SelectedContext.Provider value={[selected, updateSelectedPath]}>
+      <LabelContext.Provider value={[labelState, dispatch]}>
+        {children}
+      </LabelContext.Provider>
+    </SelectedContext.Provider>
   );
 };

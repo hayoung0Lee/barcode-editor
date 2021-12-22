@@ -1,6 +1,7 @@
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback } from "react";
 import JsBarcode from "jsbarcode";
 import styles from "../css/BarcodeNode.module.css";
+import customMemo from "../hooks/customMemo";
 
 const BarcodeNode = ({ layoutDefinition }: any) => {
   const [_, forceUpdate] = useState<any>(false);
@@ -20,4 +21,4 @@ const BarcodeNode = ({ layoutDefinition }: any) => {
   return <svg ref={barcodeRef} className={styles.barcode}></svg>;
 };
 
-export default memo(BarcodeNode);
+export default customMemo(BarcodeNode);

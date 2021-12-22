@@ -1,7 +1,8 @@
 import * as R from "ramda";
 import styles from "../css/Draggable.module.css";
-import { useRef, forwardRef, memo, useContext, useCallback } from "react";
+import { useRef, forwardRef, useContext, useCallback } from "react";
 import { LabelContext, onDragBox } from "../utils/LabelContext";
+import customMemo from "../hooks/customMemo";
 
 const Draggable = forwardRef((props: any, ref: any) => {
   const {
@@ -65,4 +66,4 @@ const Draggable = forwardRef((props: any, ref: any) => {
   );
 });
 
-export default memo(Draggable);
+export default customMemo(Draggable);

@@ -2,7 +2,14 @@ import * as R from "ramda";
 import styles from "../css/Menu.module.css";
 import Button from "./Button";
 import { memo, useContext, useCallback } from "react";
-import { LabelContext, onAdd, onRemove, onUpdate } from "../utils/LabelContext";
+import {
+  SelectedContext,
+  LabelContext,
+  onAdd,
+  onRemove,
+  onUpdate,
+} from "../utils/LabelContext";
+import customMemo from "../hooks/customMemo";
 
 const MenuButton = memo(({ children, ...props }: any) => {
   return (
@@ -12,8 +19,9 @@ const MenuButton = memo(({ children, ...props }: any) => {
   );
 });
 
-const Menu = ({ selectedPath }) => {
+const Menu = () => {
   const [_, dispatch] = useContext(LabelContext);
+  const [selectedPath] = useContext(SelectedContext);
 
   const memoizedOnAdd = useCallback(() => {
     onAdd({ selectedPath, dispatch });
@@ -57,4 +65,4 @@ const Menu = ({ selectedPath }) => {
     </div>
   );
 };
-export default memo(Menu);
+export default customMemo(Menu);
