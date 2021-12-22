@@ -2,7 +2,6 @@ import styles from "./App.module.css";
 import Editor from "./components/Editor";
 import SideBar from "./components/SideBar";
 import { useState, useReducer, useCallback } from "react";
-import { StartSize } from "./utils/constants";
 import * as R from "ramda";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
@@ -39,7 +38,7 @@ function App() {
   const [labelState, dispatch] = useReducer(reducer, {
     type: "Container",
     flex: {
-      size: StartSize,
+      size: { width: "300", height: "300" },
       flex_direction: "row",
     },
     children: [],
