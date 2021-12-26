@@ -4,7 +4,6 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import * as R from "ramda";
 import { LabelContext, onUpdate, SelectedContext } from "../utils/LabelContext";
 import { useContext, useCallback } from "react";
-import customMemo from "../hooks/customMemo";
 
 const SideBar = () => {
   const [labelState, dispatch] = useContext(LabelContext);
@@ -40,4 +39,4 @@ const SideBar = () => {
   );
 };
 
-export default customMemo(SideBar);
+export default SideBar;
