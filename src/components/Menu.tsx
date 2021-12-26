@@ -10,6 +10,7 @@ import {
   onUpdate,
 } from "../utils/LabelContext";
 import customMemo from "../hooks/customMemo";
+import ExportMenu from "./ExportMenu";
 
 const MenuButton = memo(({ children, ...props }: any) => {
   return (
@@ -61,7 +62,7 @@ const Menu = () => {
       <MenuButton onClick={memoizedToContainer}>
         Convert To Container
       </MenuButton>
-      <MenuButton></MenuButton>
+      <ExportMenu />
     </div>
   );
 };

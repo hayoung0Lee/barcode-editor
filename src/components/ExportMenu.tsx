@@ -1,4 +1,4 @@
-import styles from "../css/Footer.module.css";
+import styles from "../css/ExportMenu.module.css";
 import Button from "./Button";
 import Modal from "./Modal";
 import Export from "./Export";
