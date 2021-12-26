@@ -1,5 +1,6 @@
 import styles from "../css/SideBar.module.css";
 import FlexSetter from "./FlexSetter";
+import ContentsForm from "./ContentsForm";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import * as R from "ramda";
 import { LabelContext, onUpdate, SelectedContext } from "../utils/LabelContext";
@@ -32,7 +33,7 @@ const SideBar = () => {
           )}
         </TabPanel>
         <TabPanel>
-          <h2>Any content 2</h2>
+          <ContentsForm />
         </TabPanel>
       </Tabs>
     </div>
