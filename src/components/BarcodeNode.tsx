@@ -1,12 +1,13 @@
-import { useState, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import JsBarcode from "jsbarcode";
 import styles from "../css/BarcodeNode.module.css";
 import customMemo from "../hooks/customMemo";
 
 const BarcodeNode = ({ layoutDefinition }: any) => {
   const [_, forceUpdate] = useState<any>(false);
+  const barcodeRef = useRef(null);
 
-  const barcodeRef = useCallback((node) => {
+  const renderBarcode = (node) => {
     if (node && layoutDefinition && layoutDefinition.type === "Barcode") {
       JsBarcode(node, layoutDefinition.barcode.text, {
         format: "code128",
@@ -14,9 +15,13 @@ const BarcodeNode = ({ layoutDefinition }: any) => {
         margin: 0,
         displayValue: false,
       });
-      forceUpdate((prev) => !prev);
     }
-  }, []);
+    forceUpdate((prev) => !prev);
+  };
+
+  useEffect(() => {
+    renderBarcode(barcodeRef.current);
+  }, [layoutDefinition]);
 
   return <svg ref={barcodeRef} className={styles.barcode}></svg>;
 };
