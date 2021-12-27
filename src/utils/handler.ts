@@ -92,7 +92,7 @@ function convertToText(state, { selectedPath }) {
     const textData = {
       text: "{{text}}",
       text_size: 10,
-      text_max_line: 3,
+      text_max_line: 1,
       text_align: "left",
       font_weight: "bold",
       font_family: font,
