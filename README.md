@@ -1,22 +1,22 @@
 # Barcode Editor
 
+박스히어로 라벨을 GUI로 생성할 수 있도록 이 앱을 개발함. 프로토타입 느낌이라 아직 완벽하지는 않음.
+
+- 이[post](https://medium.com/bgpworks/%EB%B0%94%EC%BD%94%EB%93%9C-%EB%9D%BC%EB%B2%A8-%EC%9D%B8%EC%87%84-%EC%84%9C%EB%B2%84-%EA%B5%AC%ED%98%84%EA%B8%B0-rust-skia-flex-layout-serverless-d81aa7447290)에서 영감을 많이 받음.
+
+- [demo](https://hopeful-hopper-5cd4dd.netlify.app/)
+
+## Stack
+
 - [yoga-layout](https://yogalayout.com/)
-- [label 스펙](https://www.notion.so/bgpworks/Label-8074847c68454a89bd82932d92e8540b)
 - [jsBarcode](https://github.com/lindell/JsBarcode)
-- [qrcode](https://github.com/soldair/node-qrcode)
-- yoga-layout-prebuilt
+- react
+- [ramda](https://ramdajs.com/docs/)
 
-## Memo
+## Main Feature
 
-- 원래는 pt or percent로 생성되는 라벨이지만, 화면에서 편의를 위해서 px로 나타내고, %를 명시한경우 percent로 나타내도록 구현함
+- flex layout
+- barcode, text 입력
+- 기초적인 drag mode지원(double click으로 동작): 이 기능은 완벽하지는 않다.
 
-## Drag
-
-- drag and drop: http://tcpschool.com/html/html5_api_dragAndDrop
-- https://www.npmjs.com/package/react-draggable
-
-<!--
-1. useContext로 바꾸기. 상태 prop드릴링 그만.
-2. text, barcode 입력되도록 하기.
-3. 더블클릭으로 drag모드 키고, 드래그 모드시 guide를 띄우기(margin guide) + 방향화살표 같은것 가능한지
- -->
+<img src="./demo.gif">
