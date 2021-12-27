@@ -6,6 +6,7 @@ import {
   convertToBarcode,
   convertToContainer,
   convertToText,
+  updateText,
 } from "../utils/handler";
 import * as R from "ramda";
 
@@ -72,6 +73,8 @@ const reducer = (state, action) => {
       return removeAtPath(state, action.payload);
     case "UPDATE_FLEX":
       return updateAttr(state, action.payload);
+    case "UPDATE_TEXT":
+      return updateText(state, action.payload);
     case "CONVERT_TO_BARCODE":
       return convertToBarcode(state, action.payload);
     case "CONVERT_TO_TEXT":

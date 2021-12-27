@@ -24,11 +24,26 @@ function removeAtPath(state, { selectedPath }) {
 
 function updateAttr(state, { selectedPath, attr, value }) {
   try {
-    // root의 경우 [] 이렇게라 지울수가 없구만. ["children" 0] 이렇게면 그 path를 지운다.
     const pathToAttr = [...selectedPath, "flex", attr];
     return R.assocPath(pathToAttr, value, state);
   } catch (err) {
     console.error("updateAttr에서 에러남", err);
+    return state;
+  }
+}
+
+function updateText(state, { selectedPath, type, text }) {
+  try {
+    if (type === "Barcode") {
+      const pathToText = [...selectedPath, "barcode", "text"];
+      return R.assocPath(pathToText, text, state);
+    }
+    if (type === "Text") {
+      const pathToText = [...selectedPath, "text", "text"];
+      return R.assocPath(pathToText, text, state);
+    }
+  } catch (err) {
+    console.error("updateText에서 에러남", err);
     return state;
   }
 }
@@ -75,7 +90,7 @@ function convertToText(state, { selectedPath }) {
   try {
     const currentNode: any = R.path(selectedPath, state);
     const textData = {
-      text: "12312312312312text입니다 아주자우자우자ㅜㄹ잗ㄹㅈㄷㄹㅈㄷㄹㅈㄷㄹㅁㄴㅇㄹㅈㄷㄹㅈㄷ",
+      text: "{{text}}",
       text_size: 10,
       text_max_line: 3,
       text_align: "left",
@@ -207,6 +222,7 @@ export {
   appendAtPath,
   removeAtPath,
   updateAttr,
+  updateText,
   convertToBarcode,
   convertToContainer,
   convertToText,
