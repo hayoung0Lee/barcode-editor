@@ -1,14 +1,11 @@
 .app {
   max-width: fit-content;
   margin: auto;
-}
-
-.main {
   display: flex;
   justify-content: center;
 }
 
-.main > div {
+.app > div {
   flex-shrink: 0;
 }
 

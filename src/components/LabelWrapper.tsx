@@ -1,5 +1,5 @@
 import styles from "../css/LabelWrapper.module.css";
-import React from "react";
+import customMemo from "../hooks/customMemo";
 
 const LabelWrapper = ({ labelName, children }) => {
   return (
@@ -10,4 +10,4 @@ const LabelWrapper = ({ labelName, children }) => {
   );
 };
 
-export default React.memo(LabelWrapper);
+export default customMemo(LabelWrapper);

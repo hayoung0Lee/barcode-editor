@@ -1,6 +1,15 @@
 import * as R from "ramda";
 import styles from "../css/Draggable.module.css";
-import { useRef, forwardRef, memo } from "react";
+import {
+  useRef,
+  forwardRef,
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { LabelContext, onDragBox } from "../utils/LabelContext";
+import customMemo from "../hooks/customMemo";
 
 const Draggable = forwardRef((props: any, ref: any) => {
   const {
@@ -11,17 +20,33 @@ const Draggable = forwardRef((props: any, ref: any) => {
     path,
     onUpdateSelectedPath,
     selectedPath,
-    onDragBox,
     children,
   }: any = props;
   const startRef = useRef<any>({ x: undefined, y: undefined });
   const isRoot = path.length === 0;
   const isSelected = R.equals(path, selectedPath);
+  const [dragMode, setDragMode] = useState(false);
+  const [labelState, dispatch] = useContext(LabelContext);
+  const layoutDefinition: any = R.path([...path], labelState);
+  const isDraggable = !isRoot && isSelected && dragMode;
+
+  const memoizedFlexUpdate = useCallback(
+    R.partial(onDragBox, [{ selectedPath, dispatch, layoutDefinition }]),
+    [layoutDefinition, selectedPath]
+  );
+
+  useEffect(() => {
+    if (!isSelected) {
+      setDragMode(false);
+    }
+  }, [isSelected]);
 
   return (
     <div
       ref={ref ? ref : null}
-      className={`${styles.box} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.box} ${isSelected ? styles.selected : ""} ${
+        isDraggable ? styles.draggable : ""
+      } `}
       style={{
         left,
         top,
@@ -32,14 +57,20 @@ const Draggable = forwardRef((props: any, ref: any) => {
         e.stopPropagation();
         onUpdateSelectedPath(path);
       }}
-      draggable={isSelected && !isRoot ? true : false}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
+        if (isSelected && !dragMode) {
+          setDragMode(true);
+        }
+      }}
+      draggable={isDraggable}
       onDragStart={(e) => {
         e.stopPropagation();
         startRef.current = { x: e.clientX, y: e.clientY };
       }}
       onDrag={(e) => {
         e.stopPropagation();
-        onDragBox({
+        memoizedFlexUpdate({
           x: e.clientX - startRef.current.x,
           y: e.clientY - startRef.current.y,
         });
@@ -47,7 +78,7 @@ const Draggable = forwardRef((props: any, ref: any) => {
       }}
       onDragEnd={(e) => {
         e.stopPropagation();
-        onDragBox({
+        memoizedFlexUpdate({
           x: e.clientX - startRef.current.x,
           y: e.clientY - startRef.current.y,
         });
@@ -58,4 +89,4 @@ const Draggable = forwardRef((props: any, ref: any) => {
   );
 });
 
-export default memo(Draggable);
+export default customMemo(Draggable);

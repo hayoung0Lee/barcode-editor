@@ -11,20 +11,17 @@ const Export = ({ labelState, close }: any) => {
   }
 
   return (
-    <>
-      <div></div>
-      <div className={styles.export}>
-        <div className={styles.exportHeader}>
-          <Button className={styles.copy} onClick={() => copy({ labelState })}>
-            Copy
-          </Button>
-          <Button className={styles.close} onClick={close}>
-            Close
-          </Button>
-        </div>
-        <ReactJson src={labelState} theme="monokai" />
+    <div className={styles.export}>
+      <div className={styles.exportHeader}>
+        <Button className={styles.copy} onClick={() => copy({ labelState })}>
+          Copy
+        </Button>
+        <Button className={styles.close} onClick={close}>
+          Close
+        </Button>
       </div>
-    </>
+      <ReactJson src={labelState} theme="monokai" />
+    </div>
   );
 };
 
