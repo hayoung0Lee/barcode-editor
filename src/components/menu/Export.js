@@ -1,8 +1,8 @@
 import ReactJson from "react-json-view";
-import Button from "./Button";
-import styles from "../css/Export.module.css";
+import Button from "../common/Button";
+import styles from "../../css/Export.module.css";
 
-const Export = ({ labelState, close }: any) => {
+const Export = ({ labelState, close }) => {
   function copy({ labelState }) {
     const text = JSON.stringify(labelState);
     navigator.clipboard.writeText(text).then(function () {

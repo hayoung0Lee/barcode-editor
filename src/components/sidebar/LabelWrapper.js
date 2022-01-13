@@ -1,5 +1,5 @@
-import styles from "../css/LabelWrapper.module.css";
-import customMemo from "../hooks/customMemo";
+import styles from "../../css/LabelWrapper.module.css";
+import customMemo from "../../hooks/customMemo";
 
 const LabelWrapper = ({ labelName, children }) => {
   return (

@@ -9,21 +9,21 @@ const FlexSetter = ({ selectedFlex, onFlexUpdate }) => {
     selectedFlex.margin
       ? selectedFlex.margin
       : {
-          top: "0",
-          left: "0",
-          right: "0",
-          bottom: "0",
-        }
+        top: "0",
+        left: "0",
+        right: "0",
+        bottom: "0",
+      }
   );
   const [padding, setPadding] = useState(
     selectedFlex.padding
       ? selectedFlex.padding
       : {
-          top: "0",
-          left: "0",
-          right: "0",
-          bottom: "0",
-        }
+        top: "0",
+        left: "0",
+        right: "0",
+        bottom: "0",
+      }
   );
   const [flexGrow, setFlexGrow] = useState(
     selectedFlex.flexGrow ? selectedFlex.flexGrow : 0
@@ -35,21 +35,21 @@ const FlexSetter = ({ selectedFlex, onFlexUpdate }) => {
       selectedFlex.margin
         ? selectedFlex.margin
         : {
-            top: "0",
-            left: "0",
-            right: "0",
-            bottom: "0",
-          }
+          top: "0",
+          left: "0",
+          right: "0",
+          bottom: "0",
+        }
     );
     setPadding(
       selectedFlex.padding
         ? selectedFlex.padding
         : {
-            top: "0",
-            left: "0",
-            right: "0",
-            bottom: "0",
-          }
+          top: "0",
+          left: "0",
+          right: "0",
+          bottom: "0",
+        }
     );
     setFlexGrow(selectedFlex.flex_grow ? selectedFlex.flex_grow : 0);
   }, [selectedFlex]);

@@ -1,14 +1,14 @@
-import styles from "../css/SideBar.module.css";
+import styles from "../../css/SideBar.module.css";
 import FlexSetter from "./FlexSetter";
 import ContentsForm from "./ContentsForm";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import * as R from "ramda";
-import { LabelContext, onUpdate, SelectedContext } from "../utils/LabelContext";
+import { LabelContext, onUpdate, SelectedContext } from "../../utils/LabelContext";
 import { useContext, useCallback } from "react";
 
 const SideBar = () => {
   const [labelState, dispatch] = useContext(LabelContext);
-  const [selectedPath] = useContext<any>(SelectedContext);
+  const [selectedPath] = useContext(SelectedContext);
   const selectedFlex = R.path([...selectedPath, "flex"], labelState);
 
   const memoizedFlexUpdate = useCallback(

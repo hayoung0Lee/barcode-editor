@@ -1,6 +1,6 @@
-import styles from "../css/Button.module.css";
+import styles from "../../css/Button.module.css";
 
-const Button = ({ children, className, ...props }: any) => {
+const Button = ({ children, className, ...props }) => {
   if (className) {
     return (
       <button {...props} className={`${styles.button} ${className}`}>

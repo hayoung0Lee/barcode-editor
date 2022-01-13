@@ -8,10 +8,10 @@ const Modal = ({ children }) => {
   });
 
   useEffect(() => {
-    modalRoot!.appendChild(container);
+    modalRoot.appendChild(container);
 
     return () => {
-      modalRoot!.removeChild(container);
+      modalRoot.removeChild(container);
     };
   }, []);
 

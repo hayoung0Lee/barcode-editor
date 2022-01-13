@@ -2,12 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import JsBarcode from "jsbarcode";
 import styles from "../css/BarcodeNode.module.css";
 import customMemo from "../hooks/customMemo";
+import { BarcodeLayout } from "../types/index";
 
-const BarcodeNode = ({ layoutDefinition }: any) => {
-  const [_, forceUpdate] = useState<any>(false);
-  const barcodeRef = useRef(null);
+interface PropType {
+  layoutDefinition: BarcodeLayout;
+}
 
-  const renderBarcode = (node) => {
+const BarcodeNode = ({ layoutDefinition }: PropType) => {
+  const [_, forceUpdate] = useState<boolean>(false);
+  const barcodeRef = useRef<SVGSVGElement>(null);
+
+  const renderBarcode = (node: SVGSVGElement) => {
     if (node && layoutDefinition && layoutDefinition.type === "Barcode") {
       JsBarcode(node, layoutDefinition.barcode.text, {
         format: "code128",
@@ -20,7 +25,10 @@ const BarcodeNode = ({ layoutDefinition }: any) => {
   };
 
   useEffect(() => {
-    renderBarcode(barcodeRef.current);
+    if (barcodeRef.current) {
+      renderBarcode(barcodeRef.current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layoutDefinition]);
 
   return <svg ref={barcodeRef} className={styles.barcode}></svg>;

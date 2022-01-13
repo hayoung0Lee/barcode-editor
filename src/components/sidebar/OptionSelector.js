@@ -1,5 +1,5 @@
-import styles from "../css/OptionSelector.module.css";
-import Button from "./Button";
+import styles from "../../css/OptionSelector.module.css";
+import Button from "../common/Button";
 
 const OptionSelector = ({ options, selectedValue, onClickOption }) => {
   return (

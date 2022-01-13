@@ -1,10 +1,10 @@
-import { LabelContext, SelectedContext } from "../utils/LabelContext";
+import { LabelContext, SelectedContext } from "../../utils/LabelContext";
 import * as R from "ramda";
 import { useContext, useState, useEffect } from "react";
 
 const ContentsForm = () => {
   const [labelState, dispatch] = useContext(LabelContext);
-  const [selectedPath] = useContext<any>(SelectedContext);
+  const [selectedPath] = useContext(SelectedContext);
   const selectedNode: any = R.path(selectedPath, labelState);
   const [text, setText] = useState("");
 

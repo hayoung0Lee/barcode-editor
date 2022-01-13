@@ -1,7 +1,7 @@
 import styles from "./App.module.css";
 import Editor from "./components/Editor";
-import SideBar from "./components/SideBar";
-import Menu from "./components/Menu";
+import SideBar from "./components/sidebar";
+import Menu from "./components/menu";
 import { LabelProvider } from "./utils/LabelContext";
 
 function App() {

@@ -1,6 +1,6 @@
 import * as R from "ramda";
-import styles from "../css/Menu.module.css";
-import Button from "./Button";
+import styles from "../../css/Menu.module.css";
+import Button from "../common/Button";
 import { memo, useContext, useCallback } from "react";
 import {
   SelectedContext,
@@ -8,11 +8,11 @@ import {
   onAdd,
   onRemove,
   onUpdate,
-} from "../utils/LabelContext";
-import customMemo from "../hooks/customMemo";
+} from "../../utils/LabelContext";
+import customMemo from "../../hooks/customMemo";
 import ExportMenu from "./ExportMenu";
 
-const MenuButton = memo(({ children, ...props }: any) => {
+const MenuButton = memo(({ children, ...props }) => {
   return (
     <Button {...props} style={{ width: "180px", height: "30px" }}>
       {children && children}

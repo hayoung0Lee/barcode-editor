@@ -1,4 +1,10 @@
-const TextNode = ({ layoutDefinition }: any) => {
+import { TextLayout } from "../types/index";
+
+interface PropType {
+  layoutDefinition: TextLayout;
+}
+
+const TextNode = ({ layoutDefinition }: PropType) => {
   return (
     <div
       style={{

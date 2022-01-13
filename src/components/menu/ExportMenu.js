@@ -1,9 +1,9 @@
-import styles from "../css/ExportMenu.module.css";
-import Button from "./Button";
-import Modal from "./Modal";
+import styles from "../../css/ExportMenu.module.css";
+import Button from "../common/Button";
+import Modal from "../common/Modal";
 import Export from "./Export";
 import { useState, useContext } from "react";
-import { LabelContext } from "../utils/LabelContext";
+import { LabelContext } from "../../utils/LabelContext";
 
 const Footer = () => {
   const [modalStatus, toggleModal] = useState(false);

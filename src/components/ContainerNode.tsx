@@ -1,7 +1,18 @@
 import NodeWrapper from "./NodeWrapper";
 import customMemo from "../hooks/customMemo";
+import { ContainerLayout, PathType, CalcChildren } from "../types/index";
 
-const ContainerNode = ({ layoutDefinition, path, containerChildren }) => {
+interface PropType {
+  layoutDefinition: ContainerLayout;
+  path: PathType;
+  containerChildren: CalcChildren;
+}
+
+const ContainerNode = ({
+  layoutDefinition,
+  path,
+  containerChildren,
+}: PropType) => {
   return (containerChildren || []).map((child, index) => {
     if (layoutDefinition?.children[index]) {
       return (
